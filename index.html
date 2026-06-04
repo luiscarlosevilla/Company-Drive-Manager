@@ -311,6 +311,7 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
         Preview
       </button>
     </div>
+    <div id="create-result" style="margin-top:.75rem"></div>
   </div>
 
   <!-- BRANCHES TAB -->
@@ -769,9 +770,9 @@ async function createProject(){
 
     const entry={id:projId,name:fn,customer,branch:state.selectedBranch,code,driveUrl:`https://drive.google.com/drive/folders/${projId}`,createdAt:new Date().toISOString()};
     state.history.unshift(entry);saveState();renderHistory();
-    showToast(`Project "${fn}" created successfully!`);
+    showAlert('create-result','success',`Project <strong>${code}</strong> created! <a href="https://drive.google.com/drive/folders/${projId}" target="_blank" style="color:#3B6D11;text-decoration:underline">Open in Drive →</a>`);
 
-  }catch(err){showToast('Error: '+err.message,'error');}
+  }catch(err){showAlert('create-result','error','Error: '+err.message);}
   finally{
     btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg> Create project in Google Drive';
     btn.disabled=false;
@@ -833,7 +834,15 @@ function saveClientId(){state.clientId=document.getElementById('client-id-input'
 function saveRootFolder(){state.rootFolderId=document.getElementById('root-folder-id').value.trim();saveState();}
 function resetAll(){if(!confirm('Reset all saved data?'))return;localStorage.removeItem('dpc_state');location.reload();}
 
-loadState();
+function showAlert(id,type,msg){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const icon=type==='success'?'<polyline points="20 6 9 17 4 12"/>':'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
+  const bg=type==='success'?'#EAF3DE':'#FCEBEB';
+  const color=type==='success'?'#3B6D11':'#A32D2D';
+  el.innerHTML=`<div style="background:${bg};color:${color};border-radius:8px;padding:.75rem 1rem;font-size:13px;display:flex;gap:8px;align-items:flex-start;line-height:1.5"><svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;margin-top:1px;fill:none;stroke:${color};stroke-width:2;stroke-linecap:round;stroke-linejoin:round">${icon}</svg><span>${msg}</span></div>`;
+}
+
 </script>
 </body>
 </html>
