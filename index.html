@@ -231,12 +231,25 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>Customer name</label>
+          <label>Customer</label>
+          <select id="proj-customer-select" onchange="onCustomerSelectChange()" style="display:none">
+            <option value="">Select a customer…</option>
+          </select>
           <input type="text" id="proj-customer" placeholder="e.g. OSI" oninput="onFieldChange()"/>
+          <div id="customer-loading" style="display:none;font-size:11px;color:#888;margin-top:4px">
+            <span style="display:inline-block;width:10px;height:10px;border:1.5px solid #ccc;border-top-color:#185FA5;border-radius:50%;animation:spin .6s linear infinite;margin-right:4px;vertical-align:middle"></span>Loading customers from Drive…
+          </div>
         </div>
         <div class="form-group">
           <label>Project name</label>
           <input type="text" id="proj-name" placeholder="e.g. Harbor Expansion Phase 1" oninput="onFieldChange()"/>
+        </div>
+      </div>
+      <!-- New customer input — shown only when "+ New Customer" is selected -->
+      <div id="new-customer-row" style="display:none;margin-bottom:12px">
+        <div class="form-group">
+          <label>New customer name</label>
+          <input type="text" id="proj-customer-new" placeholder="Type new customer name…" oninput="onFieldChange()"/>
         </div>
       </div>
       <div class="form-row">
@@ -669,12 +682,99 @@ async function setupCompanyDrive(){
 /* ── PREVIEW ── */
 function selectBranch(el,branch){
   document.querySelectorAll('.branch-chip').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');state.selectedBranch=branch;previewStructure();
+  el.classList.add('selected');state.selectedBranch=branch;
+  loadCustomersForBranch(branch);
+  previewStructure();
 }
 function onFieldChange(){if(state.selectedBranch)previewStructure();}
+
+async function loadCustomersForBranch(branch){
+  const sel=document.getElementById('proj-customer-select');
+  const input=document.getElementById('proj-customer');
+  const loading=document.getElementById('customer-loading');
+  const newRow=document.getElementById('new-customer-row');
+
+  // Reset
+  newRow.style.display='none';
+  document.getElementById('proj-customer-new').value='';
+
+  if(!state.authed){
+    // Not connected — just show plain text input
+    sel.style.display='none';
+    input.style.display='';
+    input.value='';
+    return;
+  }
+
+  // Show loading state
+  sel.style.display='none';
+  input.style.display='none';
+  loading.style.display='block';
+
+  try{
+    const companyName=document.getElementById('company-name').value.trim()||'Company Name';
+    const rootId=await findOrCreateFolder(companyName,state.rootFolderId||null);
+    const branchId=await findOrCreateFolder(branch,rootId);
+    const customersId=await findOrCreateFolder('Customers',branchId);
+
+    // List all folders inside Customers, exclude _TEMPLATE
+    const q=`'${customersId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false and name != '_TEMPLATE - New Project'`;
+    const res=await driveGet('files',{q,fields:'files(id,name)',orderBy:'name'});
+    const customers=(res.files||[]).map(f=>f.name);
+
+    // Build dropdown
+    sel.innerHTML='<option value="">Select a customer…</option>';
+    customers.forEach(c=>{
+      const opt=document.createElement('option');
+      opt.value=c;opt.textContent=c;
+      sel.appendChild(opt);
+    });
+    // Always add New Customer option
+    const newOpt=document.createElement('option');
+    newOpt.value='__new__';newOpt.textContent='+ New Customer';
+    sel.appendChild(newOpt);
+
+    sel.style.display='';
+    input.style.display='none';
+    input.value='';
+  }catch(e){
+    // Fallback to plain text input on any error
+    sel.style.display='none';
+    input.style.display='';
+  }finally{
+    loading.style.display='none';
+  }
+}
+
+function onCustomerSelectChange(){
+  const sel=document.getElementById('proj-customer-select');
+  const newRow=document.getElementById('new-customer-row');
+  const newInput=document.getElementById('proj-customer-new');
+  if(sel.value==='__new__'){
+    newRow.style.display='block';
+    newInput.focus();
+  }else{
+    newRow.style.display='none';
+    newInput.value='';
+  }
+  previewStructure();
+}
+
+function getCustomerValue(){
+  const sel=document.getElementById('proj-customer-select');
+  const input=document.getElementById('proj-customer');
+  const newInput=document.getElementById('proj-customer-new');
+  // If dropdown is visible
+  if(sel.style.display!=='none'){
+    if(sel.value==='__new__') return newInput.value.trim();
+    return sel.value;
+  }
+  // Fallback plain input
+  return input.value.trim();
+}
 function previewStructure(){
   if(!state.selectedBranch)return;
-  const customer=document.getElementById('proj-customer').value||'Customer';
+  const customer=getCustomerValue()||'Customer';
   const name=document.getElementById('proj-name').value||'Project Name';
   const code=document.getElementById('proj-code').value||'CODE-001';
   const fn=`${code} - ${name}`;
