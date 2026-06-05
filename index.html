@@ -25,13 +25,14 @@ body{font-family:system-ui,sans-serif;background:#f5f5f3;color:#1a1a1a;font-size
 .card-title svg{width:16px;height:16px;stroke:#185FA5;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .form-group{display:flex;flex-direction:column;gap:5px}
-.form-group.full{grid-column:1/-1}
 label{font-size:12px;color:#666;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
 input,select,textarea{width:100%;padding:8px 10px;border:1px solid rgba(0,0,0,0.2);border-radius:8px;font-size:14px;background:#fff;color:#1a1a1a;font-family:inherit;outline:none;transition:border-color .15s}
 input:focus,select:focus,textarea:focus{border-color:#185FA5;box-shadow:0 0 0 2px rgba(24,95,165,.12)}
+input:disabled,select:disabled,textarea:disabled{background:#f5f5f3;color:#aaa;cursor:not-allowed;border-color:rgba(0,0,0,0.1)}
 textarea{resize:vertical;min-height:72px}
 .btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;border:1px solid rgba(0,0,0,0.2);background:transparent;color:#1a1a1a;text-decoration:none}
 .btn:hover{background:#f0f0ee}
+.btn:disabled{opacity:.45;cursor:not-allowed;pointer-events:none}
 .btn:active{transform:scale(.98)}
 .btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .btn-primary{background:#185FA5;color:#fff;border-color:#185FA5}
@@ -60,13 +61,40 @@ textarea{resize:vertical;min-height:72px}
 .perm-table th{text-align:left;padding:6px 8px;color:#666;font-weight:500;border-bottom:1px solid rgba(0,0,0,0.1)}
 .perm-table td{padding:6px 8px;border-bottom:1px solid rgba(0,0,0,0.08)}
 .perm-table tr:last-child td{border-bottom:none}
-.branch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:1rem}
+/* Branch chips */
+.branch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:0}
 .branch-chip{padding:10px 12px;border:1px solid rgba(0,0,0,0.15);border-radius:8px;font-size:13px;cursor:pointer;text-align:center;transition:all .15s;background:#fff}
 .branch-chip svg{width:18px;height:18px;stroke:#185FA5;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto 4px}
 .branch-chip:hover{border-color:#185FA5;color:#185FA5}
 .branch-chip.selected{background:#E6F1FB;border-color:#185FA5;color:#185FA5;font-weight:500}
+/* Step indicator */
+.step-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.step-num{width:24px;height:24px;border-radius:50%;background:#185FA5;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-num.inactive{background:#e0e0de;color:#999}
+.step-title{font-size:14px;font-weight:500}
+.step-sub{font-size:12px;color:#888;margin-left:auto}
+/* Locked overlay */
+.locked-card{opacity:.45;pointer-events:none;user-select:none}
+/* Custom customer dropdown */
+.cust-dropdown-wrap{position:relative}
+.cust-selected{width:100%;padding:8px 10px;border:1px solid rgba(0,0,0,0.2);border-radius:8px;font-size:14px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:border-color .15s;min-height:38px}
+.cust-selected:hover{border-color:#185FA5}
+.cust-selected.open{border-color:#185FA5;box-shadow:0 0 0 2px rgba(24,95,165,.12)}
+.cust-selected.disabled{background:#f5f5f3;color:#aaa;cursor:not-allowed;border-color:rgba(0,0,0,0.1)}
+.cust-selected svg{width:14px;height:14px;stroke:#888;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;transition:transform .15s}
+.cust-selected.open svg{transform:rotate(180deg)}
+.cust-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid rgba(0,0,0,0.15);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:100;max-height:220px;overflow-y:auto;display:none}
+.cust-list.open{display:block}
+.cust-item{padding:9px 12px;font-size:13px;cursor:pointer;transition:background .1s;display:flex;align-items:center;gap:8px}
+.cust-item:hover{background:#f0f0ee}
+.cust-item.new-item{color:#185FA5;font-weight:500;border-top:1px solid rgba(0,0,0,0.08)}
+.cust-item.loading-item{color:#888;cursor:default;font-size:12px}
+.cust-item.loading-item:hover{background:none}
+.cust-new-input{padding:8px 10px;margin-top:6px;border:1px solid #185FA5;border-radius:8px;font-size:14px;width:100%;outline:none;font-family:inherit;box-shadow:0 0 0 2px rgba(24,95,165,.12)}
+/* Status */
 .status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
 .dot-green{background:#639922}.dot-red{background:#E24B4A}
+/* History */
 .project-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.08)}
 .project-item:last-child{border-bottom:none}
 .proj-icon{width:32px;height:32px;border-radius:8px;background:#E6F1FB;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -76,7 +104,7 @@ textarea{resize:vertical;min-height:72px}
 .proj-meta .sub{font-size:12px;color:#666}
 .divider{height:1px;background:rgba(0,0,0,0.08);margin:1rem 0}
 .section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:#888;margin-bottom:6px;margin-top:12px}
-.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+.spinner{display:inline-block;width:11px;height:11px;border:1.5px solid rgba(0,0,0,.15);border-top-color:#185FA5;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:4px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .log-box{background:#1a1a1a;color:#a8e6a3;font-family:monospace;font-size:12px;border-radius:8px;padding:1rem;max-height:320px;overflow-y:auto;line-height:1.8;margin-top:1rem}
 .log-done{color:#a8e6a3}.log-err{color:#ff8080}.log-info{color:#80c8ff}.log-warn{color:#ffd080}
@@ -86,20 +114,17 @@ textarea{resize:vertical;min-height:72px}
 .oauth-steps a{color:#185FA5}
 code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:12px}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
-/* Toast popup */
-.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(0);background:#1a1a1a;color:#fff;padding:.75rem 1.5rem;border-radius:10px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.25);z-index:9999;transition:opacity .4s,transform .4s;white-space:nowrap}
-.toast.hide{opacity:0;transform:translateX(-50%) translateY(1rem)}
-.toast svg{width:16px;height:16px;stroke:#a8e6a3;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-.toast.error svg{stroke:#ff8080}
-/* Shared drive cards */
-.sd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin-bottom:1rem}
+.sd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.75rem;margin-bottom:1rem}
 .sd-card{border:1px solid rgba(0,0,0,0.1);border-radius:10px;padding:.9rem 1rem;background:#fafaf9}
-.sd-card .sd-name{font-size:13px;font-weight:500;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.sd-card .sd-name{font-size:13px;font-weight:500;margin-bottom:4px}
 .sd-card .sd-desc{font-size:11px;color:#888;line-height:1.5}
 .sd-card .sd-email{margin-top:8px}
 .sd-card .sd-email input{font-size:12px;padding:5px 8px}
-@media(max-width:640px){.form-row,.two-col,.three-col{grid-template-columns:1fr}}
+.alert{border-radius:8px;padding:.75rem 1rem;font-size:13px;display:flex;gap:8px;align-items:flex-start;margin-top:12px;line-height:1.5}
+.alert svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.alert-success{background:#EAF3DE;color:#3B6D11}.alert-success svg{stroke:#3B6D11}
+.alert-error{background:#FCEBEB;color:#A32D2D}.alert-error svg{stroke:#A32D2D}
+@media(max-width:640px){.form-row,.two-col{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -135,7 +160,6 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <p><strong>Connect your Google Workspace account first.</strong> Add your OAuth Client ID in <strong>Settings</strong>, then click "Connect Google" above.</p>
     </div>
-
     <div class="card">
       <div class="card-title">
         <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
@@ -148,49 +172,27 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
     ├── 📂 Personnel/        (Org Charts, Training, Certifications)
     ├── 📂 Finance/          (Budgets, Invoices, Expense Reports)
     ├── 📂 Assets & Inventory/
-    ├── 📂 Vendors/          ← new
+    ├── 📂 Vendors/
     └── 📂 Customers/
         ├── 📁 _TEMPLATE - New Project/
         └── 📁 [Customer]/
             └── 📁 CODE - Project Name/
                 └── 📂 01–09 sub-folders</div>
     </div>
-
     <div class="card">
       <div class="card-title">
         <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
         Shared drives — group emails
       </div>
-      <p style="font-size:13px;color:#666;margin-bottom:1rem">Enter the Google Group email for each shared drive. Leave blank to skip sharing (drive still gets created).</p>
+      <p style="font-size:13px;color:#666;margin-bottom:1rem">Enter the Google Group email for each shared drive.</p>
       <div class="sd-grid">
-        <div class="sd-card">
-          <div class="sd-name">🗄️ Accounting</div>
-          <div class="sd-desc">Branch Finance shortcuts + per-project 03_Finance shortcuts</div>
-          <div class="sd-email"><input type="text" id="email-accounting" placeholder="accounting@company.com"/></div>
-        </div>
-        <div class="sd-card">
-          <div class="sd-name">🗄️ HR</div>
-          <div class="sd-desc">Branch Personnel shortcuts across all branches</div>
-          <div class="sd-email"><input type="text" id="email-hr" placeholder="hr@company.com"/></div>
-        </div>
-        <div class="sd-card">
-          <div class="sd-name">🗄️ Operations</div>
-          <div class="sd-desc">Per-project: Overview, Planning, Execution shortcuts</div>
-          <div class="sd-email"><input type="text" id="email-operations" placeholder="operations@company.com"/></div>
-        </div>
-        <div class="sd-card">
-          <div class="sd-name">🗄️ Field</div>
-          <div class="sd-desc">Per-project: Execution + Photos shortcuts</div>
-          <div class="sd-email"><input type="text" id="email-field" placeholder="field@company.com"/></div>
-        </div>
-        <div class="sd-card">
-          <div class="sd-name">🗄️ Executive</div>
-          <div class="sd-desc">Full company structure, commenter access to everything</div>
-          <div class="sd-email"><input type="text" id="email-executive" placeholder="executive@company.com"/></div>
-        </div>
+        <div class="sd-card"><div class="sd-name">🗄️ Accounting</div><div class="sd-desc">Finance + per-project 03_Finance shortcuts</div><div class="sd-email"><input type="text" id="email-accounting" placeholder="accounting@company.com"/></div></div>
+        <div class="sd-card"><div class="sd-name">🗄️ HR</div><div class="sd-desc">Branch Personnel shortcuts</div><div class="sd-email"><input type="text" id="email-hr" placeholder="hr@company.com"/></div></div>
+        <div class="sd-card"><div class="sd-name">🗄️ Operations</div><div class="sd-desc">Per-project: Overview, Planning, Execution</div><div class="sd-email"><input type="text" id="email-operations" placeholder="operations@company.com"/></div></div>
+        <div class="sd-card"><div class="sd-name">🗄️ Field</div><div class="sd-desc">Per-project: Execution + Photos</div><div class="sd-email"><input type="text" id="email-field" placeholder="field@company.com"/></div></div>
+        <div class="sd-card"><div class="sd-name">🗄️ Executive</div><div class="sd-desc">Full structure, commenter access</div><div class="sd-email"><input type="text" id="email-executive" placeholder="executive@company.com"/></div></div>
       </div>
     </div>
-
     <div class="card">
       <div class="card-title">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
@@ -201,12 +203,10 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
         <input type="text" id="company-name" placeholder="e.g. OptimERA" value="Company Name"/>
       </div>
     </div>
-
     <div class="warn-banner">
       <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      <p><strong>Workspace admin note:</strong> Creating Shared Drives via API requires Shared Drive creation rights in your org. If creation fails, manually create each Shared Drive in Google Drive first with the exact names — the app will find and use them automatically.</p>
+      <p><strong>Workspace admin note:</strong> If Shared Drive creation fails, manually create each drive with the exact names — the app will find and use them automatically.</p>
     </div>
-
     <div class="btn-group">
       <button class="btn btn-success" id="setup-btn" onclick="setupCompanyDrive()">
         <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
@@ -224,41 +224,11 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
       <p><strong>Connect your Google Workspace account first.</strong></p>
     </div>
 
+    <!-- STEP 1: Branch -->
     <div class="card">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Project details
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Customer <span id="customer-loading-label" style="font-weight:400;color:#888;text-transform:none;letter-spacing:0"></span></label>
-          <select id="proj-customer-select" onchange="onCustomerSelectChange()">
-            <option value="">— Select branch first —</option>
-          </select>
-          <input type="text" id="proj-customer-new" placeholder="Type new customer name…" disabled
-            style="margin-top:6px;display:none" oninput="onFieldChange()"/>
-        </div>
-        <div class="form-group">
-          <label>Project name</label>
-          <input type="text" id="proj-name" placeholder="e.g. Harbor Expansion Phase 1" oninput="onFieldChange()"/>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Project code / ID</label>
-          <input type="text" id="proj-code" placeholder="e.g. MAR-2026-001" oninput="onFieldChange()"/>
-        </div>
-        <div class="form-group">
-          <label>Description (optional)</label>
-          <input type="text" id="proj-desc" placeholder="Brief description..."/>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-        Assign to branch
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <div class="step-title">Select a branch</div>
       </div>
       <div class="branch-grid">
         <div class="branch-chip" onclick="selectBranch(this,'Networks')">
@@ -282,7 +252,54 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
       </div>
     </div>
 
-    <div class="card" id="preview-card" style="display:none">
+    <!-- STEP 2: Customer -->
+    <div class="card" id="step2-card">
+      <div class="step-header">
+        <div class="step-num" id="step2-num">2</div>
+        <div class="step-title">Select or add a customer</div>
+        <div class="step-sub" id="customer-status-label"></div>
+      </div>
+      <div class="form-group">
+        <label>Customer</label>
+        <!-- Custom dropdown -->
+        <div class="cust-dropdown-wrap" id="cust-wrap">
+          <div class="cust-selected disabled" id="cust-selected" onclick="toggleCustDropdown()">
+            <span id="cust-selected-text" style="color:#aaa">— Select branch first —</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="cust-list" id="cust-list"></div>
+        </div>
+        <!-- New customer text input — shown only when + New Customer picked -->
+        <input type="text" id="cust-new-input" placeholder="Type new customer name…"
+          style="display:none;margin-top:6px"
+          oninput="previewStructure()"/>
+      </div>
+    </div>
+
+    <!-- STEP 3: Project Details -->
+    <div class="card locked-card" id="step3-card">
+      <div class="step-header">
+        <div class="step-num inactive" id="step3-num">3</div>
+        <div class="step-title">Project details</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Project name</label>
+          <input type="text" id="proj-name" placeholder="e.g. Harbor Expansion Phase 1" disabled oninput="previewStructure()"/>
+        </div>
+        <div class="form-group">
+          <label>Project code / ID</label>
+          <input type="text" id="proj-code" placeholder="e.g. MAR-2026-001" disabled oninput="previewStructure()"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description (optional)</label>
+        <input type="text" id="proj-desc" placeholder="Brief description..." disabled/>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="card locked-card" id="preview-card">
       <div class="card-title">
         <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         What will be created
@@ -293,7 +310,7 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
           <div class="folder-tree" id="preview-tree" style="font-size:11px"></div>
         </div>
         <div>
-          <div class="section-label">Shared drives (auto-synced)</div>
+          <div class="section-label">Shared drives</div>
           <div class="folder-tree" id="preview-shared" style="font-size:11px"></div>
         </div>
       </div>
@@ -305,14 +322,10 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
       <table class="perm-table" id="perm-preview"></table>
     </div>
 
-    <div class="btn-group" style="margin-top:.5rem">
-      <button class="btn btn-primary" id="create-btn" onclick="createProject()">
+    <div class="btn-group" style="margin-top:.5rem" id="create-btn-group">
+      <button class="btn btn-primary" id="create-btn" onclick="createProject()" disabled>
         <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
         Create project in Google Drive
-      </button>
-      <button class="btn" onclick="previewStructure()">
-        <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        Preview
       </button>
     </div>
     <div id="create-result" style="margin-top:.75rem"></div>
@@ -344,9 +357,7 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         Created projects
       </div>
-      <div id="history-list">
-        <p style="font-size:13px;color:#666;padding:.5rem 0">No projects created yet.</p>
-      </div>
+      <div id="history-list"><p style="font-size:13px;color:#666;padding:.5rem 0">No projects created yet.</p></div>
     </div>
   </div>
 
@@ -392,9 +403,6 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
   </div>
 </div>
 
-<!-- Toast -->
-<div id="toast" class="toast hide"></div>
-
 <script>
 const BRANCHES=['Networks','Corporate','Marine','Tech','Office Supply Store','Linemen'];
 const BRANCH_ADMIN={'Administration':['Policies','SOPs','Reports'],'Personnel':['Org Charts','Training Records','Certifications'],'Finance':['Budgets','Invoices','Expense Reports'],'Assets & Inventory':[],'Vendors':[]};
@@ -410,31 +418,24 @@ const PROJECT_FOLDERS=[
   {id:'08',name:'08_Compliance & Safety',subs:['Safety Plans','Inspection Reports','Certifications']},
   {id:'09',name:'09_Closeout',subs:['Final Reports','As-Builts','Punch Lists','Lessons Learned']}
 ];
-
-// Shared drive definitions
 const SHARED_DRIVES=[
-  {key:'accounting', name:'Accounting',  color:'#185FA5'},
-  {key:'hr',         name:'HR',          color:'#639922'},
-  {key:'operations', name:'Operations',  color:'#854F0B'},
-  {key:'field',      name:'Field',       color:'#3C3489'},
-  {key:'executive',  name:'Executive',   color:'#A32D2D'}
+  {key:'accounting',name:'Accounting'},{key:'hr',name:'HR'},
+  {key:'operations',name:'Operations'},{key:'field',name:'Field'},{key:'executive',name:'Executive'}
 ];
-
-// Which project sub-folders each shared drive gets shortcuts to
 const SD_PROJECT_FOLDERS={
-  accounting: ['03_Finance'],
-  hr:         [],  // HR has no per-project folders, only branch Personnel shortcuts
-  operations: ['01_Project Overview','04_Planning','05_Execution'],
-  field:      ['05_Execution','07_Photos & Media'],
-  executive:  ['01_Project Overview','02_Contracts & Legal','03_Finance','04_Planning','05_Execution','06_Communications','07_Photos & Media','08_Compliance & Safety','09_Closeout']
+  accounting:['03_Finance'],hr:[],
+  operations:['01_Project Overview','04_Planning','05_Execution'],
+  field:['05_Execution','07_Photos & Media'],
+  executive:['01_Project Overview','02_Contracts & Legal','03_Finance','04_Planning','05_Execution','06_Communications','07_Photos & Media','08_Compliance & Safety','09_Closeout']
 };
 
-let state={authed:false,accessToken:null,userEmail:'',selectedBranch:null,clientId:'',rootFolderId:'',sdEmails:{},branchPermissions:{},history:[]};
+// ── Core state ──
+let state={authed:false,accessToken:null,userEmail:'',selectedBranch:null,selectedCustomer:null,isNewCustomer:false,clientId:'',rootFolderId:'',sdEmails:{},branchPermissions:{},history:[]};
 let logEl=null;
 
 /* ── STATE ── */
 function loadState(){
-  try{const s=localStorage.getItem('dpc_state');if(s){const p=JSON.parse(s);state={...state,...p,authed:false,accessToken:null};}}catch(e){}
+  try{const s=localStorage.getItem('dpc_state');if(s){const p=JSON.parse(s);state={...state,...p,authed:false,accessToken:null,selectedBranch:null,selectedCustomer:null,isNewCustomer:false};}}catch(e){}
   if(!state.branchPermissions||!Object.keys(state.branchPermissions).length){
     state.branchPermissions={};
     BRANCHES.forEach(b=>{state.branchPermissions[b]=PROJECT_FOLDERS.map(f=>({folder:f.name,email:b.toLowerCase().replace(/ /g,'')+'@yourcompany.com',role:f.id==='03'?'reader':f.id==='05'||f.id==='07'?'writer':'reader'}));});
@@ -443,18 +444,12 @@ function loadState(){
   if(!state.history)state.history=[];
   if(state.clientId)document.getElementById('client-id-input').value=state.clientId;
   if(state.rootFolderId)document.getElementById('root-folder-id').value=state.rootFolderId;
-  SHARED_DRIVES.forEach(sd=>{
-    const el=document.getElementById('email-'+sd.key);
-    if(el&&state.sdEmails[sd.key])el.value=state.sdEmails[sd.key];
-  });
+  SHARED_DRIVES.forEach(sd=>{const el=document.getElementById('email-'+sd.key);if(el&&state.sdEmails[sd.key])el.value=state.sdEmails[sd.key];});
   renderHistory();renderBranchConfig();
 }
 
 function saveState(){
-  SHARED_DRIVES.forEach(sd=>{
-    const el=document.getElementById('email-'+sd.key);
-    if(el)state.sdEmails[sd.key]=el.value.trim();
-  });
+  SHARED_DRIVES.forEach(sd=>{const el=document.getElementById('email-'+sd.key);if(el)state.sdEmails[sd.key]=el.value.trim();});
   localStorage.setItem('dpc_state',JSON.stringify({clientId:state.clientId,rootFolderId:state.rootFolderId,sdEmails:state.sdEmails,branchPermissions:state.branchPermissions,history:state.history}));
 }
 
@@ -496,17 +491,6 @@ function updateAuthUI(authed){
 }
 function signOut(){state.authed=false;state.accessToken=null;state.userEmail='';updateAuthUI(false);}
 
-/* ── TOAST ── */
-let toastTimer=null;
-function showToast(msg,type='success'){
-  const t=document.getElementById('toast');
-  const icon=type==='success'?'<polyline points="20 6 9 17 4 12"/>':'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
-  t.className='toast'+(type==='error'?' error':'');
-  t.innerHTML=`<svg viewBox="0 0 24 24">${icon}</svg><span>${msg}</span>`;
-  if(toastTimer)clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>t.classList.add('hide'),4000);
-}
-
 /* ── LOG ── */
 function logLine(msg,type='info'){
   if(!logEl)return;
@@ -523,12 +507,10 @@ async function apiCall(url,method,body){
 }
 function buildUrl(path,params={}){
   const merged={supportsAllDrives:'true',includeItemsFromAllDrives:'true',...params};
-  const qs=Object.entries(merged).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
-  return `${BASE}/${path}?${qs}`;
+  return `${BASE}/${path}?`+Object.entries(merged).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
 }
 async function driveGet(path,params){return apiCall(buildUrl(path,params),'GET');}
 async function drivePost(path,params,body){return apiCall(buildUrl(path,params),'POST',body);}
-
 async function findFolder(name,parentId,driveId){
   let q=`name='${name.replace(/'/g,"\\'")}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
   if(parentId)q+=` and '${parentId}' in parents`;
@@ -541,13 +523,13 @@ async function findOrCreateFolder(name,parentId,driveId){
   const ex=await findFolder(name,parentId,driveId);if(ex)return ex;
   const meta={name,mimeType:'application/vnd.google-apps.folder'};
   if(parentId)meta.parents=[parentId];
-  const res=await drivePost('files',{fields:'id'},meta);return res.id;
+  return(await drivePost('files',{fields:'id'},meta)).id;
 }
 async function findOrCreateFolderInDrive(name,parentId,driveId){
   const ex=await findFolder(name,parentId,driveId);if(ex)return ex;
   const meta={name,mimeType:'application/vnd.google-apps.folder',parents:[parentId]};
   if(driveId)meta.driveId=driveId;
-  const res=await drivePost('files',{fields:'id'},meta);return res.id;
+  return(await drivePost('files',{fields:'id'},meta)).id;
 }
 async function createShortcut(name,targetId,parentId,driveId){
   const meta={name,mimeType:'application/vnd.google-apps.shortcut',parents:[parentId],shortcutDetails:{targetId}};
@@ -555,14 +537,9 @@ async function createShortcut(name,targetId,parentId,driveId){
   return drivePost('files',{fields:'id'},meta);
 }
 async function findOrCreateSharedDrive(name){
-  try{
-    const res=await driveGet('drives',{pageSize:'100'});
-    const found=res.drives&&res.drives.find(d=>d.name===name);
-    if(found){logLine(`  ✓ Found: ${name}`,'done');return found.id;}
-  }catch(e){}
+  try{const res=await driveGet('drives',{pageSize:'100'});const found=res.drives&&res.drives.find(d=>d.name===name);if(found){logLine(`  ✓ Found: ${name}`,'done');return found.id;}}catch(e){}
   const res=await apiCall(buildUrl('drives',{requestId:Math.random().toString(36).slice(2)}),'POST',{name});
-  logLine(`  ✓ Created: ${name}`,'done');
-  return res.id;
+  logLine(`  ✓ Created: ${name}`,'done');return res.id;
 }
 async function shareWithGroup(driveId,email,role='reader'){
   if(!email)return;
@@ -570,302 +547,286 @@ async function shareWithGroup(driveId,email,role='reader'){
   catch(e){logLine(`  ⚠ Could not share with ${email}: ${e.message}`,'warn');}
 }
 async function assignPermission(folderId,email,role){
-  const emails=email.split(',').map(e=>e.trim()).filter(Boolean);
-  for(const em of emails){
-    const type=em.includes('@googlegroups.com')?'group':'user';
-    try{await drivePost(`files/${folderId}/permissions`,{sendNotificationEmail:'false'},{type,role,emailAddress:em,sendNotificationEmail:false});}catch(e){}
+  for(const em of email.split(',').map(e=>e.trim()).filter(Boolean)){
+    try{await drivePost(`files/${folderId}/permissions`,{sendNotificationEmail:'false'},{type:em.includes('@googlegroups.com')?'group':'user',role,emailAddress:em,sendNotificationEmail:false});}catch(e){}
   }
 }
 
-/* ── SETUP COMPANY DRIVE ── */
-async function setupCompanyDrive(){
-  if(!state.authed){showToast('Please connect your Google account first.','error');return;}
-  const companyName=document.getElementById('company-name').value.trim()||'Company Name';
-  saveState();
-  const btn=document.getElementById('setup-btn');
-  btn.innerHTML='<span class="spinner"></span> Creating…';btn.disabled=true;
-  logEl=document.getElementById('setup-log');
-  logEl.innerHTML='';logEl.style.display='block';
+/* ── BRANCH SELECTION ── */
+function selectBranch(el,branch){
+  document.querySelectorAll('.branch-chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selectedBranch=branch;
+  state.selectedCustomer=null;
+  state.isNewCustomer=false;
+  // Unlock step 2
+  document.getElementById('step2-card').classList.remove('locked-card');
+  document.getElementById('step2-num').classList.remove('inactive');
+  document.getElementById('cust-selected').classList.remove('disabled');
+  // Reset new customer input
+  const ni=document.getElementById('cust-new-input');
+  ni.style.display='none';ni.value='';
+  // Load customers
+  loadCustomersForBranch(branch);
+  // Keep step 3 locked until customer chosen
+  lockStep3();
+}
 
-  try{
-    // ── MAIN DRIVE ──
-    logLine('═══ MAIN COMPANY DRIVE ═══','info');
-    const rootId=await findOrCreateFolder(companyName,state.rootFolderId||null);
-    logLine(`✓ ${companyName}/`,'done');
+function lockStep3(){
+  document.getElementById('step3-card').classList.add('locked-card');
+  document.getElementById('preview-card').classList.add('locked-card');
+  document.getElementById('step3-num').classList.add('inactive');
+  document.getElementById('create-btn').disabled=true;
+  ['proj-name','proj-code','proj-desc'].forEach(id=>{document.getElementById(id).disabled=true;document.getElementById(id).value='';});
+}
 
-    const branchAdminIds={};  // {branch: {Finance: id, Personnel: id, ...}}
+function unlockStep3(){
+  document.getElementById('step3-card').classList.remove('locked-card');
+  document.getElementById('preview-card').classList.remove('locked-card');
+  document.getElementById('step3-num').classList.remove('inactive');
+  document.getElementById('create-btn').disabled=false;
+  ['proj-name','proj-code','proj-desc'].forEach(id=>{document.getElementById(id).disabled=false;});
+}
 
-    for(const branch of BRANCHES){
-      logLine(`\n[ ${branch} ]`,'info');
+/* ── CUSTOMER DROPDOWN ── */
+async function loadCustomersForBranch(branch){
+  const sel=document.getElementById('cust-selected');
+  const list=document.getElementById('cust-list');
+  const lbl=document.getElementById('customer-status-label');
+
+  // Show loading
+  sel.innerHTML=`<span><span class="spinner"></span>Loading Google Drive customers…</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+  lbl.textContent='';
+  list.innerHTML='';
+  list.classList.remove('open');
+  sel.classList.remove('open');
+
+  let customers=[];
+  if(state.authed){
+    try{
+      const companyName=document.getElementById('company-name').value.trim()||'Company Name';
+      const rootId=await findOrCreateFolder(companyName,state.rootFolderId||null);
       const branchId=await findOrCreateFolder(branch,rootId);
-      branchAdminIds[branch]={branchId};
-
-      if(branch==='Corporate'){
-        const cwId=await findOrCreateFolder('_Company-Wide',branchId);
-        for(const f of COMPANY_WIDE)await findOrCreateFolder(f,cwId);
-        logLine(`  ✓ _Company-Wide/`,'done');
-      }
-
-      for(const [adminName,subs] of Object.entries(BRANCH_ADMIN)){
-        const adminId=await findOrCreateFolder(adminName,branchId);
-        branchAdminIds[branch][adminName]=adminId;
-        for(const sub of subs)await findOrCreateFolder(sub,adminId);
-        logLine(`  ✓ ${adminName}/`,'done');
-      }
-
       const customersId=await findOrCreateFolder('Customers',branchId);
-      branchAdminIds[branch]['Customers']=customersId;
-      const templateId=await findOrCreateFolder('_TEMPLATE - New Project',customersId);
-      for(const f of PROJECT_FOLDERS){
-        const fId=await findOrCreateFolder(f.name,templateId);
-        for(const sub of f.subs)await findOrCreateFolder(sub,fId);
-      }
-      logLine(`  ✓ Customers/ (with _TEMPLATE)`,'done');
+      const q=`'${customersId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false and name != '_TEMPLATE - New Project'`;
+      const res=await driveGet('files',{q,fields:'files(id,name)',orderBy:'name'});
+      customers=(res.files||[]).map(f=>f.name);
+      lbl.textContent=customers.length>0?`${customers.length} customer${customers.length>1?'s':''} found`:'No customers yet';
+    }catch(e){
+      lbl.textContent='Could not load from Drive';
     }
-
-    // ── SHARED DRIVES ──
-    for(const sd of SHARED_DRIVES){
-      logLine(`\n═══ ${sd.name.toUpperCase()} SHARED DRIVE ═══`,'info');
-      const sdId=await findOrCreateSharedDrive(sd.name);
-      await shareWithGroup(sdId,state.sdEmails[sd.key]||'',sd.key==='executive'?'fileOrganizer':'reader');
-
-      for(const branch of BRANCHES){
-        const sdBranchId=await findOrCreateFolderInDrive(branch,sdId,sdId);
-        logLine(`  ✓ ${branch}/`,'done');
-
-        if(sd.key==='hr'){
-          // HR: just Personnel shortcut per branch
-          const personnelId=branchAdminIds[branch]['Personnel'];
-          if(personnelId){await createShortcut('Personnel',personnelId,sdBranchId,sdId);logLine(`    ✓ 🔗 Personnel shortcut`,'done');}
-        } else if(sd.key==='executive'){
-          // Executive: shortcuts to all admin folders + Customers folder
-          for(const adminName of Object.keys(BRANCH_ADMIN)){
-            const aid=branchAdminIds[branch][adminName];
-            if(aid){await createShortcut(adminName,aid,sdBranchId,sdId);}
-          }
-          await findOrCreateFolderInDrive('Customers',sdBranchId,sdId);
-          logLine(`    ✓ 🔗 All branch shortcuts + Customers/`,'done');
-        } else {
-          // Accounting, Operations, Field: Finance/Personnel shortcuts + Customers folder
-          if(sd.key==='accounting'){
-            const finId=branchAdminIds[branch]['Finance'];
-            if(finId){await createShortcut(`Finance — ${branch}`,finId,sdBranchId,sdId);logLine(`    ✓ 🔗 Finance shortcut`,'done');}
-          }
-          await findOrCreateFolderInDrive('Customers',sdBranchId,sdId);
-          logLine(`    ✓ Customers/ (ready for project shortcuts)`,'done');
-        }
-      }
-    }
-
-    logLine('\n✅  All done! Company structure and all shared drives created.','done');
-    showToast('Setup complete! All drives created.');
-    document.getElementById('setup-result').innerHTML='';
-
-  }catch(err){
-    logLine('\n✗ Error: '+err.message,'err');
-    showToast('Error: '+err.message,'error');
-  }finally{
-    btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg> Create full company structure + all shared drives';
-    btn.disabled=false;
+  }else{
+    lbl.textContent='Connect Google to load customers';
   }
+
+  // Build list items
+  list.innerHTML='';
+  customers.forEach(c=>{
+    const item=document.createElement('div');
+    item.className='cust-item';
+    item.innerHTML=`<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:#666;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>${c}`;
+    item.onclick=()=>pickCustomer(c,false);
+    list.appendChild(item);
+  });
+  // + New Customer
+  const newItem=document.createElement('div');
+  newItem.className='cust-item new-item';
+  newItem.innerHTML=`<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:#185FA5;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Customer`;
+  newItem.onclick=()=>pickCustomer(null,true);
+  list.appendChild(newItem);
+
+  // Reset selected display
+  sel.innerHTML=`<span style="color:#aaa">Select a customer…</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+}
+
+function toggleCustDropdown(){
+  const sel=document.getElementById('cust-selected');
+  const list=document.getElementById('cust-list');
+  if(sel.classList.contains('disabled'))return;
+  const isOpen=list.classList.contains('open');
+  list.classList.toggle('open',!isOpen);
+  sel.classList.toggle('open',!isOpen);
+}
+
+function pickCustomer(name,isNew){
+  const list=document.getElementById('cust-list');
+  const sel=document.getElementById('cust-selected');
+  const ni=document.getElementById('cust-new-input');
+
+  list.classList.remove('open');
+  sel.classList.remove('open');
+
+  if(isNew){
+    state.selectedCustomer=null;
+    state.isNewCustomer=true;
+    sel.innerHTML=`<span style="color:#185FA5;font-weight:500">+ New Customer</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+    ni.style.display='block';
+    ni.value='';
+    ni.focus();
+    unlockStep3();
+  }else{
+    state.selectedCustomer=name;
+    state.isNewCustomer=false;
+    sel.innerHTML=`<span>${name}</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+    ni.style.display='none';
+    ni.value='';
+    unlockStep3();
+  }
+  previewStructure();
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click',e=>{
+  if(!document.getElementById('cust-wrap').contains(e.target)){
+    document.getElementById('cust-list').classList.remove('open');
+    document.getElementById('cust-selected').classList.remove('open');
+  }
+});
+
+function getCustomerValue(){
+  if(state.isNewCustomer) return document.getElementById('cust-new-input').value.trim();
+  return state.selectedCustomer||'';
 }
 
 /* ── PREVIEW ── */
-function selectBranch(el,branch){
-  document.querySelectorAll('.branch-chip').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');state.selectedBranch=branch;
-  loadCustomersForBranch(branch);
-  previewStructure();
-}
-function onFieldChange(){if(state.selectedBranch)previewStructure();}
-
-async function loadCustomersForBranch(branch){
-  const sel=document.getElementById('proj-customer-select');
-  const input=document.getElementById('proj-customer');
-  const loading=document.getElementById('customer-loading');
-  const newRow=document.getElementById('new-customer-row');
-
-  // Reset
-  newRow.style.display='none';
-  document.getElementById('proj-customer-new').value='';
-
-  if(!state.authed){
-    state.customerDropdownActive=false;
-    sel.style.display='none';
-    input.style.display='';
-    input.value='';
-    return;
-  }
-
-  // Show loading state
-  sel.style.display='none';
-  input.style.display='none';
-  loading.style.display='block';
-
-  try{
-    const companyName=document.getElementById('company-name').value.trim()||'Company Name';
-    const rootId=await findOrCreateFolder(companyName,state.rootFolderId||null);
-    const branchId=await findOrCreateFolder(branch,rootId);
-    const customersId=await findOrCreateFolder('Customers',branchId);
-
-    // List all folders inside Customers, exclude _TEMPLATE
-    const q=`'${customersId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false and name != '_TEMPLATE - New Project'`;
-    const res=await driveGet('files',{q,fields:'files(id,name)',orderBy:'name'});
-    const customers=(res.files||[]).map(f=>f.name);
-
-    // Build dropdown
-    sel.innerHTML='<option value="">Select a customer…</option>';
-    customers.forEach(c=>{
-      const opt=document.createElement('option');
-      opt.value=c;opt.textContent=c;
-      sel.appendChild(opt);
-    });
-    // Always add New Customer option
-    const newOpt=document.createElement('option');
-    newOpt.value='__new__';newOpt.textContent='+ New Customer';
-    sel.appendChild(newOpt);
-
-    sel.style.display='';
-    input.style.display='none';
-    input.value='';
-    state.customerDropdownActive=true;
-  }catch(e){
-    state.customerDropdownActive=false;
-    sel.style.display='none';
-    input.style.display='';
-  }finally{
-    loading.style.display='none';
-  }
-}
-
-function onCustomerSelectChange(){
-  const sel=document.getElementById('proj-customer-select');
-  const newRow=document.getElementById('new-customer-row');
-  const newInput=document.getElementById('proj-customer-new');
-  if(sel.value==='__new__'){
-    newRow.style.display='block';
-    newInput.focus();
-  }else{
-    newRow.style.display='none';
-    newInput.value='';
-  }
-  previewStructure();
-}
-
-function getCustomerValue(){
-  // Use the state flag set during loadCustomersForBranch
-  if(state.customerDropdownActive){
-    const sel=document.getElementById('proj-customer-select');
-    if(sel.value==='__new__'){
-      return document.getElementById('proj-customer-new').value.trim()||null;
-    }
-    return sel.value||null;
-  }
-  return document.getElementById('proj-customer').value.trim()||null;
-}
 function previewStructure(){
   if(!state.selectedBranch)return;
   const customer=getCustomerValue()||'Customer';
   const name=document.getElementById('proj-name').value||'Project Name';
   const code=document.getElementById('proj-code').value||'CODE-001';
   const fn=`${code} - ${name}`;
-
   let tree=`📁 ${state.selectedBranch}/Customers/\n└── 📁 ${customer}/\n    └── 📁 ${fn}/\n`;
-  PROJECT_FOLDERS.forEach((f,i)=>{
-    const last=i===PROJECT_FOLDERS.length-1;
-    tree+=`        ${last?'└──':'├──'} 📂 ${f.name}\n`;
-  });
+  PROJECT_FOLDERS.forEach((f,i)=>{const last=i===PROJECT_FOLDERS.length-1;tree+=`        ${last?'└──':'├──'} 📂 ${f.name}\n`;});
   document.getElementById('preview-tree').textContent=tree;
-
-  let shared=`🗄️ Accounting → 🔗 03_Finance\n🗄️ Operations → 🔗 Overview, Planning, Execution\n🗄️ Field → 🔗 Execution, Photos\n🗄️ Executive → 🔗 All sub-folders (commenter)\n🗄️ HR → (branch Personnel only, no per-project)`;
-  document.getElementById('preview-shared').textContent=shared;
-
+  document.getElementById('preview-shared').textContent=`🗄️ Accounting  → 🔗 03_Finance\n🗄️ Operations  → 🔗 Overview, Planning, Execution\n🗄️ Field        → 🔗 Execution, Photos\n🗄️ Executive    → 🔗 All sub-folders (commenter)\n🗄️ HR           → branch Personnel only`;
   const perms=state.branchPermissions[state.selectedBranch]||[];
   let tbl='<tr><th>Sub-folder</th><th>Email / Group</th><th>Permission</th></tr>';
-  perms.forEach(p=>{
-    const bc=p.role==='writer'?'badge-blue':p.role==='commenter'?'badge-amber':'badge-gray';
-    tbl+=`<tr><td style="font-size:11px">${p.folder}</td><td style="font-size:11px;color:#666">${p.email}</td><td><span class="badge ${bc}">${p.role}</span></td></tr>`;
-  });
+  perms.forEach(p=>{const bc=p.role==='writer'?'badge-blue':p.role==='commenter'?'badge-amber':'badge-gray';tbl+=`<tr><td style="font-size:11px">${p.folder}</td><td style="font-size:11px;color:#666">${p.email}</td><td><span class="badge ${bc}">${p.role}</span></td></tr>`;});
   document.getElementById('perm-preview').innerHTML=tbl;
-  document.getElementById('preview-card').style.display='block';
 }
 
 /* ── CREATE PROJECT ── */
 async function createProject(){
-  if(!state.authed){showToast('Please connect your Google account first.','error');return;}
-  const customer=document.getElementById('proj-customer').value.trim();
+  const customer=getCustomerValue();
   const name=document.getElementById('proj-name').value.trim();
-  if(!customer){showToast('Please enter a customer name.','error');return;}
-  if(!name){showToast('Please enter a project name.','error');return;}
-  if(!state.selectedBranch){showToast('Please select a branch.','error');return;}
   const code=document.getElementById('proj-code').value.trim()||'PRJ';
+  if(!customer){showAlert('create-result','error',state.isNewCustomer?'Please type a new customer name.':'Please select a customer.');return;}
+  if(!name){showAlert('create-result','error','Please enter a project name.');return;}
   const fn=`${code} - ${name}`;
   const btn=document.getElementById('create-btn');
   btn.innerHTML='<span class="spinner"></span> Creating…';btn.disabled=true;
-
   try{
     const companyName=document.getElementById('company-name').value.trim()||'Company Name';
-
-    // ── MAIN DRIVE ──
     const rootId=await findOrCreateFolder(companyName,state.rootFolderId||null);
     const branchId=await findOrCreateFolder(state.selectedBranch,rootId);
     const customersId=await findOrCreateFolder('Customers',branchId);
     const customerFolderId=await findOrCreateFolder(customer,customersId);
     const projId=await findOrCreateFolder(fn,customerFolderId);
-
     const subIds={};
     for(const f of PROJECT_FOLDERS){
       const id=await findOrCreateFolder(f.name,projId);
       subIds[f.name]=id;
       for(const s of f.subs)await findOrCreateFolder(s,id);
     }
-
-    // Branch permissions
     const perms=state.branchPermissions[state.selectedBranch]||[];
     for(const p of perms){
       if(subIds[p.folder]&&p.email&&!p.email.includes('@yourcompany.com')){
         try{await assignPermission(subIds[p.folder],p.email,p.role==='writer'?'writer':'reader');}catch(e){}
       }
     }
-
-    // ── SYNC TO ALL SHARED DRIVES ──
+    // Sync to shared drives
     const drivesRes=await driveGet('drives',{pageSize:'100'});
     const allDrives=drivesRes.drives||[];
-
     for(const sd of SHARED_DRIVES){
-      if(sd.key==='hr')continue; // HR has no per-project folders
+      if(sd.key==='hr')continue;
       const sdDrive=allDrives.find(d=>d.name===sd.name);
       if(!sdDrive)continue;
-      const sdId=sdDrive.id;
-
       try{
+        const sdId=sdDrive.id;
         const sdBranchId=await findFolder(state.selectedBranch,sdId,sdId);
         if(!sdBranchId)continue;
-        const sdCustomersId=await findOrCreateFolderInDrive('Customers',sdBranchId,sdId);
-        const sdCustomerId=await findOrCreateFolderInDrive(customer,sdCustomersId,sdId);
-        const sdProjId=await findOrCreateFolderInDrive(fn,sdCustomerId,sdId);
-
-        const foldersToShortcut=SD_PROJECT_FOLDERS[sd.key]||[];
-        for(const fname of foldersToShortcut){
+        const sdCustRootId=await findOrCreateFolderInDrive('Customers',sdBranchId,sdId);
+        const sdCustId=await findOrCreateFolderInDrive(customer,sdCustRootId,sdId);
+        const sdProjId=await findOrCreateFolderInDrive(fn,sdCustId,sdId);
+        for(const fname of SD_PROJECT_FOLDERS[sd.key]||[]){
           if(subIds[fname]){
-            const role=sd.key==='executive'?'commenter':undefined;
             await createShortcut(fname,subIds[fname],sdProjId,sdId);
-            // Apply commenter permission on the actual folder for executive
             if(sd.key==='executive'&&state.sdEmails['executive']){
               try{await assignPermission(subIds[fname],state.sdEmails['executive'],'commenter');}catch(e){}
             }
           }
         }
-      }catch(e){/* silently skip if drive not set up */}
+      }catch(e){}
     }
-
     const entry={id:projId,name:fn,customer,branch:state.selectedBranch,code,driveUrl:`https://drive.google.com/drive/folders/${projId}`,createdAt:new Date().toISOString()};
     state.history.unshift(entry);saveState();renderHistory();
     showAlert('create-result','success',`Project <strong>${code}</strong> created! <a href="https://drive.google.com/drive/folders/${projId}" target="_blank" style="color:#3B6D11;text-decoration:underline">Open in Drive →</a>`);
-
-  }catch(err){showAlert('create-result','error','Error: '+err.message);}
-  finally{
+  }catch(err){
+    showAlert('create-result','error','Error: '+err.message);
+  }finally{
     btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg> Create project in Google Drive';
+    btn.disabled=false;
+  }
+}
+
+/* ── SETUP ── */
+async function setupCompanyDrive(){
+  if(!state.authed){showAlert('setup-result','error','Please connect your Google account first.');return;}
+  const companyName=document.getElementById('company-name').value.trim()||'Company Name';
+  saveState();
+  const btn=document.getElementById('setup-btn');
+  btn.innerHTML='<span class="spinner"></span> Creating…';btn.disabled=true;
+  logEl=document.getElementById('setup-log');logEl.innerHTML='';logEl.style.display='block';
+  try{
+    logLine('═══ MAIN COMPANY DRIVE ═══','info');
+    const rootId=await findOrCreateFolder(companyName,state.rootFolderId||null);
+    logLine(`✓ ${companyName}/`,'done');
+    const branchAdminIds={};
+    for(const branch of BRANCHES){
+      logLine(`\n[ ${branch} ]`,'info');
+      const branchId=await findOrCreateFolder(branch,rootId);
+      branchAdminIds[branch]={branchId};
+      if(branch==='Corporate'){const cwId=await findOrCreateFolder('_Company-Wide',branchId);for(const f of COMPANY_WIDE)await findOrCreateFolder(f,cwId);logLine(`  ✓ _Company-Wide/`,'done');}
+      for(const [adminName,subs] of Object.entries(BRANCH_ADMIN)){
+        const adminId=await findOrCreateFolder(adminName,branchId);
+        branchAdminIds[branch][adminName]=adminId;
+        for(const sub of subs)await findOrCreateFolder(sub,adminId);
+        logLine(`  ✓ ${adminName}/`,'done');
+      }
+      const customersId=await findOrCreateFolder('Customers',branchId);
+      branchAdminIds[branch]['Customers']=customersId;
+      const templateId=await findOrCreateFolder('_TEMPLATE - New Project',customersId);
+      for(const f of PROJECT_FOLDERS){const fId=await findOrCreateFolder(f.name,templateId);for(const sub of f.subs)await findOrCreateFolder(sub,fId);}
+      logLine(`  ✓ Customers/ (with _TEMPLATE)`,'done');
+    }
+    for(const sd of SHARED_DRIVES){
+      logLine(`\n═══ ${sd.name.toUpperCase()} SHARED DRIVE ═══`,'info');
+      const sdId=await findOrCreateSharedDrive(sd.name);
+      await shareWithGroup(sdId,state.sdEmails[sd.key]||'',sd.key==='executive'?'fileOrganizer':'reader');
+      for(const branch of BRANCHES){
+        const sdBranchId=await findOrCreateFolderInDrive(branch,sdId,sdId);
+        logLine(`  ✓ ${branch}/`,'done');
+        if(sd.key==='hr'){
+          const pid=branchAdminIds[branch]['Personnel'];
+          if(pid){await createShortcut('Personnel',pid,sdBranchId,sdId);logLine(`    ✓ 🔗 Personnel`,'done');}
+        }else if(sd.key==='executive'){
+          for(const adminName of Object.keys(BRANCH_ADMIN)){const aid=branchAdminIds[branch][adminName];if(aid)await createShortcut(adminName,aid,sdBranchId,sdId);}
+          await findOrCreateFolderInDrive('Customers',sdBranchId,sdId);
+          logLine(`    ✓ 🔗 All branch shortcuts + Customers/`,'done');
+        }else{
+          if(sd.key==='accounting'){const fid=branchAdminIds[branch]['Finance'];if(fid){await createShortcut(`Finance — ${branch}`,fid,sdBranchId,sdId);logLine(`    ✓ 🔗 Finance`,'done');}}
+          await findOrCreateFolderInDrive('Customers',sdBranchId,sdId);
+          logLine(`    ✓ Customers/`,'done');
+        }
+      }
+    }
+    logLine('\n✅  All done!','done');
+    showAlert('setup-result','success','Setup complete! <a href="https://drive.google.com" target="_blank" style="color:#3B6D11;text-decoration:underline">Open Google Drive →</a>');
+  }catch(err){
+    logLine('\n✗ Error: '+err.message,'err');
+    showAlert('setup-result','error','Error: '+err.message);
+  }finally{
+    btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg> Create full company structure + all shared drives';
     btn.disabled=false;
   }
 }
@@ -877,10 +838,10 @@ function renderBranchConfig(){
   let html='';
   PROJECT_FOLDERS.forEach(f=>{
     const p=perms.find(x=>x.folder===f.name)||{folder:f.name,email:'',role:'reader'};
-    html+=`<div class="section-label">${f.name}</div>
+    html+=`<div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:#888;margin-bottom:6px;margin-top:12px">${f.name}</div>
     <div style="display:flex;gap:8px;margin-bottom:8px">
       <input type="text" placeholder="email1@co.com, email2@co.com" value="${p.email||''}" onchange="updatePerm('${branch}','${f.name}','email',this.value)" style="flex:1;font-size:13px"/>
-      <select style="width:120px;font-size:13px" onchange="updatePerm('${branch}','${f.name}','role',this.value)">
+      <select style="width:120px;font-size:13px;padding:8px 10px;border:1px solid rgba(0,0,0,0.2);border-radius:8px" onchange="updatePerm('${branch}','${f.name}','role',this.value)">
         <option value="reader" ${p.role==='reader'?'selected':''}>Viewer</option>
         <option value="writer" ${p.role==='writer'?'selected':''}>Editor</option>
         <option value="commenter" ${p.role==='commenter'?'selected':''}>Commenter</option>
@@ -924,16 +885,14 @@ function renderHistory(){
 function saveClientId(){state.clientId=document.getElementById('client-id-input').value.trim();saveState();document.getElementById('client-id-status').textContent=state.clientId?'✓ Saved':'';}
 function saveRootFolder(){state.rootFolderId=document.getElementById('root-folder-id').value.trim();saveState();}
 function resetAll(){if(!confirm('Reset all saved data?'))return;localStorage.removeItem('dpc_state');location.reload();}
-
 function showAlert(id,type,msg){
-  const el=document.getElementById(id);
-  if(!el)return;
+  const el=document.getElementById(id);if(!el)return;
   const icon=type==='success'?'<polyline points="20 6 9 17 4 12"/>':'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
-  const bg=type==='success'?'#EAF3DE':'#FCEBEB';
-  const color=type==='success'?'#3B6D11':'#A32D2D';
+  const bg=type==='success'?'#EAF3DE':'#FCEBEB';const color=type==='success'?'#3B6D11':'#A32D2D';
   el.innerHTML=`<div style="background:${bg};color:${color};border-radius:8px;padding:.75rem 1rem;font-size:13px;display:flex;gap:8px;align-items:flex-start;line-height:1.5"><svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;margin-top:1px;fill:none;stroke:${color};stroke-width:2;stroke-linecap:round;stroke-linejoin:round">${icon}</svg><span>${msg}</span></div>`;
 }
 
+loadState();
 </script>
 </body>
 </html>
