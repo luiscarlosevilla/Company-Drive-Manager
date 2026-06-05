@@ -438,7 +438,7 @@ const SD_PROJECT_FOLDERS={
   executive:  ['01_Project Overview','02_Contracts & Legal','03_Finance','04_Planning','05_Execution','06_Communications','07_Photos & Media','08_Compliance & Safety','09_Closeout']
 };
 
-let state={authed:false,accessToken:null,userEmail:'',selectedBranch:null,clientId:'',rootFolderId:'',sdEmails:{},branchPermissions:{},history:[]};
+let state={authed:false,accessToken:null,userEmail:'',selectedBranch:null,clientId:'',rootFolderId:'',sdEmails:{},branchPermissions:{},history:[],customerDropdownActive:false};
 let logEl=null;
 
 /* ── STATE ── */
@@ -699,7 +699,7 @@ async function loadCustomersForBranch(branch){
   document.getElementById('proj-customer-new').value='';
 
   if(!state.authed){
-    // Not connected — just show plain text input
+    state.customerDropdownActive=false;
     sel.style.display='none';
     input.style.display='';
     input.value='';
@@ -737,8 +737,9 @@ async function loadCustomersForBranch(branch){
     sel.style.display='';
     input.style.display='none';
     input.value='';
+    state.customerDropdownActive=true;
   }catch(e){
-    // Fallback to plain text input on any error
+    state.customerDropdownActive=false;
     sel.style.display='none';
     input.style.display='';
   }finally{
@@ -761,19 +762,15 @@ function onCustomerSelectChange(){
 }
 
 function getCustomerValue(){
-  const sel=document.getElementById('proj-customer-select');
-  const input=document.getElementById('proj-customer');
-  const newInput=document.getElementById('proj-customer-new');
-  // Dropdown is visible
-  if(sel&&sel.style.display!=='none'&&sel.style.display!==''){
+  // Use the state flag set during loadCustomersForBranch
+  if(state.customerDropdownActive){
+    const sel=document.getElementById('proj-customer-select');
     if(sel.value==='__new__'){
-      const v=newInput.value.trim();
-      return v||null;
+      return document.getElementById('proj-customer-new').value.trim()||null;
     }
     return sel.value||null;
   }
-  // Fallback plain text input
-  return input.value.trim()||null;
+  return document.getElementById('proj-customer').value.trim()||null;
 }
 function previewStructure(){
   if(!state.selectedBranch)return;
