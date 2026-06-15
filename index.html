@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>OptimERA Drive Manager</title>
+<title>OptimERA Drive Manager — Admin</title>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -26,7 +26,7 @@ body{font-family:system-ui,sans-serif;background:#f5f5f3;color:#1a1a1a;font-size
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .form-group{display:flex;flex-direction:column;gap:5px}
 label{font-size:12px;color:#666;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
-input,select,textarea{width:100%;padding:8px 10px;border:1px solid rgba(0,0,0,0.2);border-radius:8px;font-size:14px;background:#fff;color:#1a1a1a;font-family:inherit;outline:none;transition:border-color .15s}
+input,select{width:100%;padding:8px 10px;border:1px solid rgba(0,0,0,0.2);border-radius:8px;font-size:14px;background:#fff;color:#1a1a1a;font-family:inherit;outline:none;transition:border-color .15s}
 input:focus,select:focus{border-color:#185FA5;box-shadow:0 0 0 2px rgba(24,95,165,.12)}
 input:disabled,select:disabled{background:#f5f5f3;color:#aaa;cursor:not-allowed;border-color:rgba(0,0,0,0.1)}
 .btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;border:1px solid rgba(0,0,0,0.2);background:transparent;color:#1a1a1a;text-decoration:none}
@@ -71,7 +71,6 @@ input:disabled,select:disabled{background:#f5f5f3;color:#aaa;cursor:not-allowed;
 .step-title{font-size:14px;font-weight:500}
 .step-sub{font-size:12px;color:#888;margin-left:auto}
 .locked-card{opacity:.45;pointer-events:none;user-select:none}
-/* Custom dropdown */
 .cust-dropdown-wrap{position:relative}
 .cust-selected{width:100%;padding:8px 10px;border:1px solid rgba(0,0,0,0.2);border-radius:8px;font-size:14px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:border-color .15s;min-height:38px}
 .cust-selected:hover{border-color:#185FA5}
@@ -84,6 +83,8 @@ input:disabled,select:disabled{background:#f5f5f3;color:#aaa;cursor:not-allowed;
 .cust-item{padding:9px 12px;font-size:13px;cursor:pointer;transition:background .1s;display:flex;align-items:center;gap:8px}
 .cust-item:hover{background:#f0f0ee}
 .cust-item.new-item{color:#185FA5;font-weight:500;border-top:1px solid rgba(0,0,0,0.08)}
+.cust-item.empty-item{color:#aaa;cursor:default;font-size:12px}
+.cust-item.empty-item:hover{background:none}
 .status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
 .dot-green{background:#639922}.dot-red{background:#E24B4A}
 .project-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.08)}
@@ -116,41 +117,31 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
 .alert svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .alert-success{background:#EAF3DE;color:#3B6D11}.alert-success svg{stroke:#3B6D11}
 .alert-error{background:#FCEBEB;color:#A32D2D}.alert-error svg{stroke:#A32D2D}
-/* Verify checklist */
+.alert-info{background:#E6F1FB;color:#0C447C}.alert-info svg{stroke:#0C447C}
 .verify-list{list-style:none;margin-top:.75rem}
 .verify-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px solid rgba(0,0,0,0.06)}
 .verify-item:last-child{border-bottom:none}
 .verify-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px}
-.vi-ok{background:#EAF3DE;color:#3B6D11}
-.vi-miss{background:#FCEBEB;color:#A32D2D}
-.vi-pending{background:#f0f0ee;color:#888}
-/* Phase buttons */
-.phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:.5rem}
-.phase-btn{padding:14px 10px;border:1.5px solid rgba(0,0,0,0.15);border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;text-align:center;background:#fff;transition:all .15s}
+.vi-ok{background:#EAF3DE;color:#3B6D11}.vi-miss{background:#FCEBEB;color:#A32D2D}.vi-pending{background:#f0f0ee;color:#888}
+/* Triage */
+.triage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:1rem}
+.triage-item{border:2px solid rgba(0,0,0,0.1);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .15s;background:#fff;position:relative}
+.triage-item:hover{border-color:#185FA5}
+.triage-item.selected{border-color:#185FA5;background:#E6F1FB}
+.triage-item img{width:100%;height:100px;object-fit:cover;display:block;background:#f0f0ee}
+.triage-item .triage-icon{width:100%;height:100px;display:flex;align-items:center;justify-content:center;background:#f5f5f3}
+.triage-item .triage-icon svg{width:32px;height:32px;stroke:#aaa;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.triage-item .triage-name{font-size:11px;padding:6px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#1a1a1a}
+.triage-item .triage-date{font-size:10px;padding:0 8px 6px;color:#888}
+.triage-check{position:absolute;top:6px;left:6px;width:18px;height:18px;border-radius:50%;background:#185FA5;display:none;align-items:center;justify-content:center}
+.triage-item.selected .triage-check{display:flex}
+.triage-check svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.assign-panel{background:#f5f5f3;border-radius:10px;padding:1rem;margin-top:1rem;display:none}
+.assign-panel.visible{display:block}
+.phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:.5rem}
+.phase-btn{padding:10px 8px;border:1.5px solid rgba(0,0,0,0.15);border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;text-align:center;background:#fff;transition:all .15s}
 .phase-btn:hover{border-color:#185FA5;color:#185FA5}
 .phase-btn.selected{background:#E6F1FB;border-color:#185FA5;color:#185FA5}
-.phase-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto 6px}
-/* Upload zone */
-.drop-zone{border:2px dashed rgba(0,0,0,0.2);border-radius:12px;padding:2.5rem 1.5rem;text-align:center;cursor:pointer;transition:all .2s;background:#fafaf9;margin-top:.75rem}
-.drop-zone:hover,.drop-zone.dragover{border-color:#185FA5;background:#E6F1FB}
-.drop-zone svg{width:36px;height:36px;stroke:#185FA5;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin:0 auto .75rem;display:block}
-.drop-zone p{font-size:14px;color:#555;margin-bottom:.35rem}
-.drop-zone span{font-size:12px;color:#888}
-/* File previews */
-.file-list{margin-top:1rem;display:flex;flex-direction:column;gap:8px}
-.file-item{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:8px 12px}
-.file-thumb{width:38px;height:38px;border-radius:6px;object-fit:cover;background:#f0f0ee;flex-shrink:0}
-.file-thumb-icon{width:38px;height:38px;border-radius:6px;background:#f0f0ee;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.file-thumb-icon svg{width:18px;height:18px;stroke:#888;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.file-info{flex:1;min-width:0}
-.file-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.file-size{font-size:11px;color:#888}
-.file-status{font-size:11px;font-weight:500;flex-shrink:0}
-.file-progress{height:3px;background:#e0e0de;border-radius:2px;margin-top:4px;overflow:hidden}
-.file-progress-bar{height:100%;background:#185FA5;border-radius:2px;transition:width .3s}
-.file-remove{width:24px;height:24px;border-radius:50%;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#aaa;transition:color .15s}
-.file-remove:hover{color:#A32D2D}
-.file-remove svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:640px){.form-row,.two-col{grid-template-columns:1fr}}
 </style>
 </head>
@@ -162,13 +153,12 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
     </div>
     <div>
       <h1>OptimERA Drive Manager</h1>
-      <p>Project folder creator &amp; photo uploader</p>
+      <p style="font-size:11px;background:#FAEEDA;color:#854F0B;padding:2px 8px;border-radius:20px;display:inline-block;margin-top:2px">Admin</p>
     </div>
     <div class="header-right">
       <span id="auth-status" style="font-size:12px;color:#666"><span class="status-dot dot-red"></span>Not connected</span>
       <button class="btn btn-sm" id="auth-btn" onclick="handleAuth()">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        Connect Google
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Connect Google
       </button>
     </div>
   </div>
@@ -176,7 +166,7 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
   <div class="nav">
     <button class="nav-btn active" onclick="switchTab('setup',this)">🏢 Company Drive</button>
     <button class="nav-btn" onclick="switchTab('create',this)">+ Create Project</button>
-    <button class="nav-btn" onclick="switchTab('upload',this)">📷 Upload Photos</button>
+    <button class="nav-btn" onclick="switchTab('triage',this)">📥 Triage Uploads</button>
     <button class="nav-btn" onclick="switchTab('branches',this)">Branches &amp; Permissions</button>
     <button class="nav-btn" onclick="switchTab('history',this)">Project History</button>
     <button class="nav-btn" onclick="switchTab('settings',this)">Settings</button>
@@ -193,7 +183,7 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
         <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         Verify folder directory
       </div>
-      <p style="font-size:13px;color:#666;margin-bottom:1rem">Checks if the <strong>OptimERA</strong> folder structure exists in Google Drive. If anything is missing, it will be created automatically.</p>
+      <p style="font-size:13px;color:#666;margin-bottom:.75rem">Checks if the <strong>OptimERA</strong> folder structure exists in Google Drive. Missing folders are created automatically. After verifying, copy the displayed Root Folder ID into <strong>Settings</strong> so both apps stay in sync.</p>
       <div class="btn-group">
         <button class="btn btn-primary" id="verify-btn" onclick="verifyDirectory()">
           <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -208,7 +198,6 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
         <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
         Shared drives — group emails
       </div>
-      <p style="font-size:13px;color:#666;margin-bottom:1rem">Enter the Google Group email for each shared drive.</p>
       <div class="sd-grid">
         <div class="sd-card"><div class="sd-name">🗄️ Accounting</div><div class="sd-desc">Finance + per-project 03_Finance shortcuts</div><div class="sd-email"><input type="text" id="email-accounting" placeholder="accounting@company.com"/></div></div>
         <div class="sd-card"><div class="sd-name">🗄️ HR</div><div class="sd-desc">Branch Personnel shortcuts</div><div class="sd-email"><input type="text" id="email-hr" placeholder="hr@company.com"/></div></div>
@@ -228,14 +217,10 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
   <div id="tab-create" class="tab">
     <div id="not-authed-msg" class="setup-banner">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <p><strong>Connect your Google Workspace account first.</strong></p>
+      <p><strong>Connect your Google account first.</strong></p>
     </div>
-    <!-- Step 1 -->
     <div class="card">
-      <div class="step-header">
-        <div class="step-num">1</div>
-        <div class="step-title">Select a branch</div>
-      </div>
+      <div class="step-header"><div class="step-num">1</div><div class="step-title">Select a branch</div></div>
       <div class="branch-grid">
         <div class="branch-chip" onclick="selectBranch(this,'Networks')"><svg viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-4h14v4M12 12V8"/></svg>Networks</div>
         <div class="branch-chip" onclick="selectBranch(this,'Corporate')"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Corporate</div>
@@ -245,18 +230,13 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
         <div class="branch-chip" onclick="selectBranch(this,'Linemen')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Linemen</div>
       </div>
     </div>
-    <!-- Step 2 -->
     <div class="card locked-card" id="step2-card">
-      <div class="step-header">
-        <div class="step-num inactive" id="step2-num">2</div>
-        <div class="step-title">Select or add a customer</div>
-        <div class="step-sub" id="customer-status-label"></div>
-      </div>
+      <div class="step-header"><div class="step-num inactive" id="step2-num">2</div><div class="step-title">Select or add a customer</div><div class="step-sub" id="customer-status-label"></div></div>
       <div class="form-group">
         <label>Customer</label>
         <div class="cust-dropdown-wrap" id="cust-wrap">
           <div class="cust-selected disabled" id="cust-selected" onclick="toggleCustDropdown()">
-            <span id="cust-selected-text" style="color:#aaa">— Select branch first —</span>
+            <span style="color:#aaa">— Select branch first —</span>
             <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="cust-list" id="cust-list"></div>
@@ -264,42 +244,22 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
         <input type="text" id="cust-new-input" placeholder="Type new customer name…" style="display:none;margin-top:6px" oninput="previewStructure()"/>
       </div>
     </div>
-    <!-- Step 3 -->
     <div class="card locked-card" id="step3-card">
-      <div class="step-header">
-        <div class="step-num inactive" id="step3-num">3</div>
-        <div class="step-title">Project details</div>
-      </div>
+      <div class="step-header"><div class="step-num inactive" id="step3-num">3</div><div class="step-title">Project details</div></div>
       <div class="form-row">
-        <div class="form-group">
-          <label>Project name</label>
-          <input type="text" id="proj-name" placeholder="e.g. Harbor Expansion Phase 1" disabled oninput="previewStructure()"/>
-        </div>
-        <div class="form-group">
-          <label>Project code / ID</label>
-          <input type="text" id="proj-code" placeholder="e.g. MAR-2026-001" disabled oninput="previewStructure()"/>
-        </div>
+        <div class="form-group"><label>Project name</label><input type="text" id="proj-name" placeholder="e.g. Harbor Expansion Phase 1" disabled oninput="previewStructure()"/></div>
+        <div class="form-group"><label>Project code / ID</label><input type="text" id="proj-code" placeholder="e.g. MAR-2026-001" disabled oninput="previewStructure()"/></div>
       </div>
-      <div class="form-group">
-        <label>Description (optional)</label>
-        <input type="text" id="proj-desc" placeholder="Brief description..." disabled/>
-      </div>
+      <div class="form-group"><label>Description (optional)</label><input type="text" id="proj-desc" placeholder="Brief description..." disabled/></div>
     </div>
-    <!-- Preview -->
     <div class="card locked-card" id="preview-card">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        What will be created
-      </div>
+      <div class="card-title"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>What will be created</div>
       <div class="two-col">
         <div><div class="section-label">Main drive</div><div class="folder-tree" id="preview-tree" style="font-size:11px"></div></div>
         <div><div class="section-label">Shared drives</div><div class="folder-tree" id="preview-shared" style="font-size:11px"></div></div>
       </div>
       <div class="divider"></div>
-      <div class="card-title" style="margin-bottom:.5rem">
-        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Permission assignments
-      </div>
+      <div class="card-title" style="margin-bottom:.5rem"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Permission assignments</div>
       <table class="perm-table" id="perm-preview"></table>
     </div>
     <div class="btn-group" style="margin-top:.5rem">
@@ -311,122 +271,85 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
     <div id="create-result" style="margin-top:.75rem"></div>
   </div>
 
-  <!-- UPLOAD PHOTOS TAB -->
-  <div id="tab-upload" class="tab">
-    <div id="upload-not-authed" class="setup-banner">
+  <!-- TRIAGE UPLOADS TAB -->
+  <div id="tab-triage" class="tab">
+    <div id="triage-not-authed" class="setup-banner">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <p><strong>Connect your Google account first</strong> to upload photos to a project.</p>
+      <p><strong>Connect your Google account first.</strong></p>
     </div>
-
-    <!-- Step 1: Branch -->
     <div class="card">
-      <div class="step-header">
-        <div class="step-num">1</div>
-        <div class="step-title">Select a branch</div>
+      <div class="card-title">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+        General Delivery — triage pending uploads
       </div>
-      <div class="branch-grid">
-        <div class="branch-chip" onclick="upSelectBranch(this,'Networks')"><svg viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-4h14v4M12 12V8"/></svg>Networks</div>
-        <div class="branch-chip" onclick="upSelectBranch(this,'Corporate')"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Corporate</div>
-        <div class="branch-chip" onclick="upSelectBranch(this,'Marine')"><svg viewBox="0 0 24 24"><path d="M3 17l1.5-9L12 3l7.5 5L21 17"/><path d="M3 17c3 3 15 3 18 0"/></svg>Marine</div>
-        <div class="branch-chip" onclick="upSelectBranch(this,'Tech')"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="14" x2="22" y2="14"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="14" x2="4" y2="14"/></svg>Tech</div>
-        <div class="branch-chip" onclick="upSelectBranch(this,'Office Supply Store')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Office Supply</div>
-        <div class="branch-chip" onclick="upSelectBranch(this,'Linemen')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Linemen</div>
+      <p style="font-size:13px;color:#666;margin-bottom:1rem">Select a branch to view files uploaded to General Delivery. Multi-select files and assign them to the correct customer, project, and phase.</p>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label>Branch</label>
+        <select id="triage-branch-select" onchange="loadTriageFiles()">
+          <option value="">— Select branch —</option>
+          <option>Networks</option><option>Corporate</option><option>Marine</option>
+          <option>Tech</option><option>Office Supply Store</option><option>Linemen</option>
+        </select>
       </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <span id="triage-count" style="font-size:13px;color:#666"></span>
+        <div class="btn-group">
+          <button class="btn btn-sm" id="triage-select-all" onclick="triageSelectAll()" style="display:none">Select all</button>
+          <button class="btn btn-sm" id="triage-clear-sel" onclick="triageClearSelection()" style="display:none">Clear selection</button>
+        </div>
+      </div>
+      <div class="triage-grid" id="triage-grid"></div>
     </div>
 
-    <!-- Step 2: Customer -->
-    <div class="card locked-card" id="up-step2-card">
-      <div class="step-header">
-        <div class="step-num inactive" id="up-step2-num">2</div>
-        <div class="step-title">Select customer</div>
-        <div class="step-sub" id="up-customer-label"></div>
+    <!-- Assign panel -->
+    <div class="assign-panel" id="assign-panel">
+      <div class="card-title" style="margin-bottom:.75rem">
+        <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Assign <span id="assign-count">0</span> selected file(s) to…
       </div>
-      <div class="form-group">
+      <!-- Customer -->
+      <div class="form-group" style="margin-bottom:10px">
         <label>Customer</label>
-        <div class="cust-dropdown-wrap" id="up-cust-wrap">
-          <div class="cust-selected disabled" id="up-cust-selected" onclick="toggleUpCustDropdown()">
-            <span style="color:#aaa">— Select branch first —</span>
+        <div class="cust-dropdown-wrap">
+          <div class="cust-selected" id="triage-cust-selected" onclick="toggleTriageCustDropdown()">
+            <span style="color:#aaa">Select customer…</span>
             <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="cust-list" id="up-cust-list"></div>
+          <div class="cust-list" id="triage-cust-list"></div>
         </div>
       </div>
-    </div>
-
-    <!-- Step 3: Project -->
-    <div class="card locked-card" id="up-step3-card">
-      <div class="step-header">
-        <div class="step-num inactive" id="up-step3-num">3</div>
-        <div class="step-title">Select project</div>
-        <div class="step-sub" id="up-project-label"></div>
-      </div>
-      <div class="form-group">
+      <!-- Project -->
+      <div class="form-group" style="margin-bottom:10px">
         <label>Project</label>
-        <div class="cust-dropdown-wrap" id="up-proj-wrap">
-          <div class="cust-selected disabled" id="up-proj-selected" onclick="toggleUpProjDropdown()">
-            <span style="color:#aaa">— Select customer first —</span>
+        <div class="cust-dropdown-wrap">
+          <div class="cust-selected disabled" id="triage-proj-selected" onclick="toggleTriageProjDropdown()">
+            <span style="color:#aaa">Select project…</span>
             <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="cust-list" id="up-proj-list"></div>
+          <div class="cust-list" id="triage-proj-list"></div>
         </div>
       </div>
-    </div>
-
-    <!-- Step 4: Phase -->
-    <div class="card locked-card" id="up-step4-card">
-      <div class="step-header">
-        <div class="step-num inactive" id="up-step4-num">4</div>
-        <div class="step-title">Select phase</div>
-      </div>
-      <div class="phase-grid">
-        <div class="phase-btn" id="phase-before" onclick="selectPhase('Before')">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 8 14"/></svg>
-          Before
-        </div>
-        <div class="phase-btn" id="phase-during" onclick="selectPhase('During')">
-          <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-          During
-        </div>
-        <div class="phase-btn" id="phase-after" onclick="selectPhase('After')">
-          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          After
+      <!-- Phase -->
+      <div class="form-group" style="margin-bottom:12px">
+        <label>Phase</label>
+        <div class="phase-grid">
+          <div class="phase-btn" id="triage-phase-before" onclick="selectTriagePhase('Before')">Before</div>
+          <div class="phase-btn" id="triage-phase-during" onclick="selectTriagePhase('During')">During</div>
+          <div class="phase-btn" id="triage-phase-after" onclick="selectTriagePhase('After')">After</div>
         </div>
       </div>
-    </div>
-
-    <!-- Step 5: Upload -->
-    <div class="card locked-card" id="up-step5-card">
-      <div class="step-header">
-        <div class="step-num inactive" id="up-step5-num">5</div>
-        <div class="step-title">Upload photos</div>
-        <div class="step-sub" id="up-destination-label"></div>
-      </div>
-      <input type="file" id="file-input" multiple accept="image/*,.pdf,.heic,.heif" style="display:none" onchange="onFilesSelected(this.files)"/>
-      <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
-        ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
-        <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-        <p>Drag &amp; drop photos here, or click to browse</p>
-        <span>Supports JPG, PNG, HEIC, PDF</span>
-      </div>
-      <div class="file-list" id="file-list"></div>
-      <div class="btn-group" style="margin-top:1rem" id="upload-btn-row" style="display:none">
-        <button class="btn btn-primary" id="upload-btn" onclick="uploadFiles()" style="display:none">
-          <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-          Upload to Google Drive
-        </button>
-        <button class="btn" id="clear-btn" onclick="clearFiles()" style="display:none">Clear all</button>
-      </div>
-      <div id="upload-result" style="margin-top:.75rem"></div>
+      <button class="btn btn-success" id="assign-btn" onclick="assignFiles()" disabled>
+        <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Move to project folder
+      </button>
+      <div id="assign-result" style="margin-top:.75rem"></div>
     </div>
   </div>
 
   <!-- BRANCHES TAB -->
   <div id="tab-branches" class="tab">
     <div class="card">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Branch permission configuration
-      </div>
+      <div class="card-title"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Branch permission configuration</div>
       <p style="font-size:13px;color:#666;margin-bottom:1rem">Separate multiple emails with commas.</p>
       <div class="form-group" style="margin-bottom:1rem">
         <label>Select branch</label>
@@ -442,10 +365,7 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
   <!-- HISTORY TAB -->
   <div id="tab-history" class="tab">
     <div class="card">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        Created projects
-      </div>
+      <div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Created projects</div>
       <div id="history-list"><p style="font-size:13px;color:#666;padding:.5rem 0">No projects created yet.</p></div>
     </div>
   </div>
@@ -453,15 +373,12 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
   <!-- SETTINGS TAB -->
   <div id="tab-settings" class="tab">
     <div class="card">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Google OAuth configuration
-      </div>
+      <div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Google OAuth configuration</div>
       <ol class="oauth-steps">
         <li>Go to <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> and open your project.</li>
         <li>Enable the <strong>Google Drive API</strong> under APIs &amp; Services → Library.</li>
         <li>Go to Credentials → OAuth 2.0 Client ID → add your URL to Authorized JavaScript origins and redirect URIs.</li>
-        <li>On OAuth consent screen set publishing to <strong>Internal</strong>.</li>
+        <li>Set OAuth consent screen to <strong>Internal</strong>.</li>
         <li>Paste your Client ID below.</li>
       </ol>
       <div class="form-group" style="margin-top:1rem">
@@ -471,21 +388,16 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
       <div id="client-id-status" style="margin-top:6px;font-size:12px;color:#666"></div>
     </div>
     <div class="card">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-        Root folder (optional)
-      </div>
-      <p style="font-size:13px;color:#666;margin-bottom:.75rem">Leave blank to use top of My Drive.</p>
+      <div class="card-title"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>OptimERA Root Folder ID</div>
+      <p style="font-size:13px;color:#666;margin-bottom:.75rem">After running Verify above, copy the displayed folder ID here. This is shared with the Upload app so both point to the same OptimERA folder — even if the host account changes.</p>
       <div class="form-group">
-        <label>Parent folder ID</label>
-        <input type="text" id="root-folder-id" placeholder="Folder ID from Drive URL" oninput="saveRootFolder()"/>
+        <label>Root Folder ID</label>
+        <input type="text" id="root-folder-id" placeholder="Paste OptimERA folder ID here" oninput="saveRootFolder()"/>
       </div>
+      <div id="root-folder-status" style="margin-top:6px;font-size:12px;color:#666"></div>
     </div>
     <div class="card">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>
-        Data &amp; reset
-      </div>
+      <div class="card-title"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>Data &amp; reset</div>
       <p style="font-size:13px;color:#666;margin-bottom:1rem">All config stored in browser localStorage.</p>
       <button class="btn btn-danger" onclick="resetAll()">Reset all data</button>
     </div>
@@ -521,10 +433,8 @@ const SD_PROJECT_FOLDERS={
 
 let state={authed:false,accessToken:null,userEmail:'',selectedBranch:null,selectedCustomer:null,isNewCustomer:false,clientId:'',rootFolderId:'',sdEmails:{},branchPermissions:{},history:[]};
 let logEl=null;
-// Upload state
-let upState={branch:null,customerId:null,customerName:null,projectId:null,projectName:null,phase:null,phaseId:null,files:[]};
+let triageState={branch:null,gdFolderId:null,files:[],selected:new Set(),custId:null,custName:null,projId:null,projName:null,phase:null};
 
-/* ── STATE ── */
 function loadState(){
   try{const s=localStorage.getItem('dpc_state');if(s){const p=JSON.parse(s);state={...state,...p,authed:false,accessToken:null,selectedBranch:null,selectedCustomer:null,isNewCustomer:false};}}catch(e){}
   if(!state.branchPermissions||!Object.keys(state.branchPermissions).length){
@@ -534,7 +444,7 @@ function loadState(){
   if(!state.sdEmails)state.sdEmails={};
   if(!state.history)state.history=[];
   if(state.clientId)document.getElementById('client-id-input').value=state.clientId;
-  if(state.rootFolderId)document.getElementById('root-folder-id').value=state.rootFolderId;
+  if(state.rootFolderId){document.getElementById('root-folder-id').value=state.rootFolderId;document.getElementById('root-folder-status').textContent='✓ Saved';}
   SHARED_DRIVES.forEach(sd=>{const el=document.getElementById('email-'+sd.key);if(el&&state.sdEmails[sd.key])el.value=state.sdEmails[sd.key];});
   renderHistory();renderBranchConfig();
 }
@@ -543,7 +453,6 @@ function saveState(){
   localStorage.setItem('dpc_state',JSON.stringify({clientId:state.clientId,rootFolderId:state.rootFolderId,sdEmails:state.sdEmails,branchPermissions:state.branchPermissions,history:state.history}));
 }
 
-/* ── NAV ── */
 function switchTab(tab,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -552,7 +461,6 @@ function switchTab(tab,btn){
   if(tab==='history')renderHistory();
 }
 
-/* ── AUTH ── */
 function handleAuth(){
   if(state.authed){signOut();return;}
   if(!state.clientId){alert('Please add your OAuth Client ID in Settings first.');return;}
@@ -575,20 +483,18 @@ async function fetchUserInfo(){
 }
 function updateAuthUI(authed){
   const s=document.getElementById('auth-status'),b=document.getElementById('auth-btn');
-  ['not-authed-msg','setup-not-authed','upload-not-authed'].map(id=>document.getElementById(id)).filter(Boolean).forEach(n=>n.style.display=authed?'none':'flex');
+  ['not-authed-msg','setup-not-authed','triage-not-authed'].map(id=>document.getElementById(id)).filter(Boolean).forEach(n=>n.style.display=authed?'none':'flex');
   if(authed){s.innerHTML=`<span class="status-dot dot-green"></span>${state.userEmail||'Connected'}`;b.textContent='Sign out';}
   else{s.innerHTML='<span class="status-dot dot-red"></span>Not connected';b.textContent='Connect Google';}
 }
 function signOut(){state.authed=false;state.accessToken=null;state.userEmail='';updateAuthUI(false);}
 
-/* ── LOG ── */
 function logLine(msg,type='info'){
   if(!logEl)return;
   const d=document.createElement('div');d.className='log-'+type;d.textContent=msg;
   logEl.appendChild(d);logEl.scrollTop=logEl.scrollHeight;
 }
 
-/* ── DRIVE API ── */
 const BASE='https://www.googleapis.com/drive/v3';
 async function apiCall(url,method,body){
   const r=await fetch(url,{method,headers:{'Authorization':'Bearer '+state.accessToken,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
@@ -634,69 +540,66 @@ async function findOrCreateSharedDrive(name){
 async function shareWithGroup(driveId,email,role='reader'){
   if(!email)return;
   try{await drivePost(`files/${driveId}/permissions`,{sendNotificationEmail:'false'},{type:'group',role,emailAddress:email,sendNotificationEmail:false});logLine(`  ✓ Shared with ${email}`,'done');}
-  catch(e){logLine(`  ⚠ Could not share with ${email}: ${e.message}`,'warn');}
+  catch(e){logLine(`  ⚠ Could not share: ${e.message}`,'warn');}
 }
 async function assignPermission(folderId,email,role){
   for(const em of email.split(',').map(e=>e.trim()).filter(Boolean)){
     try{await drivePost(`files/${folderId}/permissions`,{sendNotificationEmail:'false'},{type:em.includes('@googlegroups.com')?'group':'user',role,emailAddress:em,sendNotificationEmail:false});}catch(e){}
   }
 }
-
-/* ── LIST FOLDERS ── */
 async function listFolders(parentId,driveId,exclude=[]){
   let q=`'${parentId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`;
-  if(exclude.length)exclude.forEach(e=>{q+=` and name != '${e.replace(/'/g,"\\'")}'`;});
+  exclude.forEach(e=>{q+=` and name != '${e.replace(/'/g,"\\'")}'`;});
   const params={q,fields:'files(id,name)',orderBy:'name'};
   if(driveId){params.driveId=driveId;params.corpora='drive';}
   const res=await driveGet('files',params);
   return res.files||[];
 }
+async function listFiles(parentId){
+  const q=`'${parentId}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed=false`;
+  const res=await driveGet('files',{q,fields:'files(id,name,mimeType,createdTime,thumbnailLink,webViewLink)',orderBy:'createdTime desc'});
+  return res.files||[];
+}
 
-/* ── VERIFY DIRECTORY ── */
+function getRootId(){return state.rootFolderId||null;}
+
+/* ── VERIFY ── */
 async function verifyDirectory(){
   if(!state.authed){showAlert('verify-result','error','Please connect your Google account first.');return;}
   const btn=document.getElementById('verify-btn');
   btn.innerHTML='<span class="spinner-white"></span> Checking…';btn.disabled=true;
-  const list=document.getElementById('verify-list');
-  list.innerHTML='';
+  const list=document.getElementById('verify-list');list.innerHTML='';
   document.getElementById('verify-result').innerHTML='';
-  logEl=document.getElementById('setup-log');
-  logEl.innerHTML='';logEl.style.display='block';
+  logEl=document.getElementById('setup-log');logEl.innerHTML='';logEl.style.display='block';
+  saveState();
 
-  const addItem=(label,status)=>{
+  const addItem=(label)=>{
     const li=document.createElement('li');li.className='verify-item';
-    const icon=status==='ok'?'✓':status==='creating'?'…':'✗';
-    const cls=status==='ok'?'vi-ok':status==='creating'?'vi-pending':'vi-miss';
-    li.innerHTML=`<div class="verify-icon ${cls}">${icon}</div><span>${label}</span>`;
+    li.innerHTML=`<div class="verify-icon vi-pending"><span class="spinner" style="margin:0"></span></div><span>${label}</span>`;
     list.appendChild(li);return li;
   };
-  const updateItem=(li,status,label)=>{
-    const icon=status==='ok'?'✓':status==='creating'?'…':'✗';
-    const cls=status==='ok'?'vi-ok':status==='creating'?'vi-pending':'vi-miss';
-    li.querySelector('.verify-icon').className=`verify-icon ${cls}`;
-    li.querySelector('.verify-icon').textContent=icon;
-    if(label)li.querySelector('span').textContent=label;
-  };
+  const okItem=(li,label)=>{li.querySelector('.verify-icon').className='verify-icon vi-ok';li.querySelector('.verify-icon').textContent='✓';if(label)li.querySelector('span').textContent=label;};
 
   try{
+    let li=addItem('OptimERA root folder');
+    const rootId=await findOrCreateFolder(COMPANY,getRootId());
+    okItem(li,`OptimERA/ ✓ — ID: ${rootId}`);
+    // Auto-save root ID
+    state.rootFolderId=rootId;
+    document.getElementById('root-folder-id').value=rootId;
+    document.getElementById('root-folder-status').textContent='✓ Auto-saved from Verify';
     saveState();
-    // Check root
-    let li=addItem(`OptimERA root folder`,`creating`);
-    const rootId=await findOrCreateFolder(COMPANY,state.rootFolderId||null);
-    updateItem(li,'ok','OptimERA root folder ✓');
-    logLine(`✓ ${COMPANY}/`,'done');
+    logLine(`✓ ${COMPANY}/ — ID: ${rootId}`,'done');
 
     const branchAdminIds={};
     for(const branch of BRANCHES){
-      li=addItem(`${branch}/`,'creating');
+      li=addItem(`${branch}/`);
       const branchId=await findOrCreateFolder(branch,rootId);
       branchAdminIds[branch]={branchId};
       logLine(`\n[ ${branch} ]`,'info');
-
       if(branch==='Corporate'){
         const cwId=await findOrCreateFolder('_Company-Wide',branchId);
         for(const f of COMPANY_WIDE)await findOrCreateFolder(f,cwId);
-        logLine(`  ✓ _Company-Wide/`,'done');
       }
       for(const [adminName,subs] of Object.entries(BRANCH_ADMIN)){
         const adminId=await findOrCreateFolder(adminName,branchId);
@@ -704,31 +607,34 @@ async function verifyDirectory(){
         for(const sub of subs)await findOrCreateFolder(sub,adminId);
         logLine(`  ✓ ${adminName}/`,'done');
       }
+      // General Delivery
+      await findOrCreateFolder('General Delivery',branchId);
+      logLine(`  ✓ General Delivery/`,'done');
+      // Customers
       const customersId=await findOrCreateFolder('Customers',branchId);
       branchAdminIds[branch]['Customers']=customersId;
       const templateId=await findOrCreateFolder('_TEMPLATE - New Project',customersId);
       for(const f of PROJECT_FOLDERS){const fId=await findOrCreateFolder(f.name,templateId);for(const sub of f.subs)await findOrCreateFolder(sub,fId);}
-      updateItem(li,'ok',`${branch}/ ✓`);
+      okItem(li,`${branch}/ ✓`);
       logLine(`  ✓ Customers/ (with _TEMPLATE)`,'done');
     }
 
-    // Shared drives
     for(const sd of SHARED_DRIVES){
-      li=addItem(`Shared Drive: ${sd.name}`,'creating');
+      li=addItem(`Shared Drive: ${sd.name}`);
       logLine(`\n═══ ${sd.name.toUpperCase()} ═══`,'info');
       const sdId=await findOrCreateSharedDrive(sd.name);
       await shareWithGroup(sdId,state.sdEmails[sd.key]||'',sd.key==='executive'?'fileOrganizer':'reader');
       for(const branch of BRANCHES){
         const sdBranchId=await findOrCreateFolderInDrive(branch,sdId,sdId);
         if(sd.key==='hr'){const pid=branchAdminIds[branch]['Personnel'];if(pid)await createShortcut('Personnel',pid,sdBranchId,sdId);}
-        else if(sd.key==='executive'){for(const adminName of Object.keys(BRANCH_ADMIN)){const aid=branchAdminIds[branch][adminName];if(aid)await createShortcut(adminName,aid,sdBranchId,sdId);}await findOrCreateFolderInDrive('Customers',sdBranchId,sdId);}
+        else if(sd.key==='executive'){for(const an of Object.keys(BRANCH_ADMIN)){const aid=branchAdminIds[branch][an];if(aid)await createShortcut(an,aid,sdBranchId,sdId);}await findOrCreateFolderInDrive('Customers',sdBranchId,sdId);}
         else{if(sd.key==='accounting'){const fid=branchAdminIds[branch]['Finance'];if(fid)await createShortcut(`Finance — ${branch}`,fid,sdBranchId,sdId);}await findOrCreateFolderInDrive('Customers',sdBranchId,sdId);}
       }
-      updateItem(li,'ok',`Shared Drive: ${sd.name} ✓`);
+      okItem(li,`Shared Drive: ${sd.name} ✓`);
     }
 
     logLine('\n✅  All done!','done');
-    showAlert('verify-result','success','All folders verified and ready. <a href="https://drive.google.com" target="_blank" style="color:#3B6D11;text-decoration:underline">Open Google Drive →</a>');
+    showAlert('verify-result','success',`All folders verified! Root Folder ID <strong>${rootId}</strong> has been auto-saved to Settings. <a href="https://drive.google.com" target="_blank" style="color:#3B6D11;text-decoration:underline">Open Google Drive →</a>`);
   }catch(err){
     logLine('\n✗ Error: '+err.message,'err');
     showAlert('verify-result','error','Error: '+err.message);
@@ -738,46 +644,199 @@ async function verifyDirectory(){
   }
 }
 
-/* ── CREATE PROJECT: BRANCH ── */
+/* ── TRIAGE ── */
+async function loadTriageFiles(){
+  const branch=document.getElementById('triage-branch-select').value;
+  if(!branch||!state.authed)return;
+  triageState.branch=branch;triageState.files=[];triageState.selected=new Set();
+  triageState.custId=null;triageState.custName=null;triageState.projId=null;triageState.projName=null;triageState.phase=null;
+  document.getElementById('assign-panel').classList.remove('visible');
+  document.getElementById('triage-grid').innerHTML=`<div style="grid-column:1/-1;font-size:13px;color:#888;padding:1rem 0"><span class="spinner"></span>Loading files from General Delivery…</div>`;
+  document.getElementById('triage-count').textContent='';
+  document.getElementById('triage-select-all').style.display='none';
+  document.getElementById('triage-clear-sel').style.display='none';
+  try{
+    const rootId=getRootId();
+    const branchId=await findOrCreateFolder(branch,rootId);
+    const gdId=await findOrCreateFolder('General Delivery',branchId);
+    triageState.gdFolderId=gdId;
+    const files=await listFiles(gdId);
+    triageState.files=files;
+    renderTriageGrid();
+    // Load customers for assign panel
+    const customersId=await findOrCreateFolder('Customers',branchId);
+    triageState.customersFolderId=customersId;
+    await loadTriageCustomers(customersId);
+  }catch(e){
+    document.getElementById('triage-grid').innerHTML=`<div style="grid-column:1/-1;font-size:13px;color:#A32D2D;padding:1rem 0">Error: ${e.message}</div>`;
+  }
+}
+
+function renderTriageGrid(){
+  const grid=document.getElementById('triage-grid');
+  const count=triageState.files.length;
+  document.getElementById('triage-count').textContent=count>0?`${count} file${count>1?'s':''} pending`:'No pending files in General Delivery';
+  document.getElementById('triage-select-all').style.display=count>0?'inline-flex':'none';
+  if(count===0){grid.innerHTML='<div style="grid-column:1/-1;font-size:13px;color:#888;padding:1rem 0">No files pending in General Delivery for this branch.</div>';return;}
+  grid.innerHTML='';
+  triageState.files.forEach((f,i)=>{
+    const isImg=f.mimeType&&f.mimeType.startsWith('image/');
+    const date=f.createdTime?new Date(f.createdTime).toLocaleDateString():'';
+    const sel=triageState.selected.has(f.id);
+    const div=document.createElement('div');
+    div.className='triage-item'+(sel?' selected':'');
+    div.onclick=()=>toggleTriageSelect(f.id);
+    div.innerHTML=`
+      <div class="triage-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      ${isImg&&f.thumbnailLink?`<img src="${f.thumbnailLink}" alt="${f.name}"/>`:`<div class="triage-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>`}
+      <div class="triage-name" title="${f.name}">${f.name}</div>
+      <div class="triage-date">${date}</div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function toggleTriageSelect(fileId){
+  if(triageState.selected.has(fileId))triageState.selected.delete(fileId);
+  else triageState.selected.add(fileId);
+  renderTriageGrid();
+  updateAssignPanel();
+}
+function triageSelectAll(){triageState.files.forEach(f=>triageState.selected.add(f.id));renderTriageGrid();updateAssignPanel();}
+function triageClearSelection(){triageState.selected=new Set();renderTriageGrid();updateAssignPanel();}
+function updateAssignPanel(){
+  const n=triageState.selected.size;
+  document.getElementById('assign-panel').classList.toggle('visible',n>0);
+  document.getElementById('assign-count').textContent=n;
+  document.getElementById('triage-clear-sel').style.display=n>0?'inline-flex':'none';
+  updateAssignBtn();
+}
+function updateAssignBtn(){
+  const ready=triageState.selected.size>0&&triageState.projId&&triageState.phase;
+  document.getElementById('assign-btn').disabled=!ready;
+}
+
+async function loadTriageCustomers(customersId){
+  const list=document.getElementById('triage-cust-list');
+  list.innerHTML='';
+  const customers=await listFolders(customersId,null,['_TEMPLATE - New Project']);
+  if(!customers.length){const e=document.createElement('div');e.className='cust-item empty-item';e.textContent='No customers found';list.appendChild(e);return;}
+  customers.forEach(c=>{
+    const item=document.createElement('div');item.className='cust-item';
+    item.innerHTML=`<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:#666;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>${c.name}`;
+    item.onclick=()=>pickTriageCustomer(c.id,c.name);
+    list.appendChild(item);
+  });
+}
+
+function toggleTriageCustDropdown(){
+  const sel=document.getElementById('triage-cust-selected');const list=document.getElementById('triage-cust-list');
+  const open=list.classList.contains('open');list.classList.toggle('open',!open);sel.classList.toggle('open',!open);
+}
+function toggleTriageProjDropdown(){
+  const sel=document.getElementById('triage-proj-selected');const list=document.getElementById('triage-proj-list');
+  if(sel.classList.contains('disabled'))return;
+  const open=list.classList.contains('open');list.classList.toggle('open',!open);sel.classList.toggle('open',!open);
+}
+
+async function pickTriageCustomer(id,name){
+  document.getElementById('triage-cust-list').classList.remove('open');document.getElementById('triage-cust-selected').classList.remove('open');
+  triageState.custId=id;triageState.custName=name;triageState.projId=null;triageState.projName=null;triageState.phase=null;
+  document.getElementById('triage-cust-selected').innerHTML=`<span>${name}</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+  ['triage-phase-before','triage-phase-during','triage-phase-after'].forEach(id=>document.getElementById(id).classList.remove('selected'));
+  // Load projects
+  const projSel=document.getElementById('triage-proj-selected');
+  projSel.classList.remove('disabled');
+  projSel.innerHTML=`<span><span class="spinner"></span>Loading projects…</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+  const list=document.getElementById('triage-proj-list');list.innerHTML='';
+  const projects=await listFolders(id);
+  if(!projects.length){const e=document.createElement('div');e.className='cust-item empty-item';e.textContent='No projects found';list.appendChild(e);}
+  projects.forEach(p=>{
+    const item=document.createElement('div');item.className='cust-item';
+    item.innerHTML=`<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:#666;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>${p.name}`;
+    item.onclick=()=>pickTriageProject(p.id,p.name);
+    list.appendChild(item);
+  });
+  projSel.innerHTML=`<span style="color:#aaa">Select project…</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+  updateAssignBtn();
+}
+
+function pickTriageProject(id,name){
+  document.getElementById('triage-proj-list').classList.remove('open');document.getElementById('triage-proj-selected').classList.remove('open');
+  triageState.projId=id;triageState.projName=name;
+  document.getElementById('triage-proj-selected').innerHTML=`<span>${name}</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+  updateAssignBtn();
+}
+
+function selectTriagePhase(phase){
+  ['triage-phase-before','triage-phase-during','triage-phase-after'].forEach(id=>document.getElementById(id).classList.remove('selected'));
+  document.getElementById('triage-phase-'+phase.toLowerCase()).classList.add('selected');
+  triageState.phase=phase;updateAssignBtn();
+}
+
+document.addEventListener('click',e=>{
+  const wraps=['cust-wrap','triage-cust-selected','triage-proj-selected'];
+  if(!document.getElementById('cust-wrap')?.contains(e.target)){document.getElementById('cust-list')?.classList.remove('open');document.getElementById('cust-selected')?.classList.remove('open');}
+  if(!document.getElementById('triage-cust-selected')?.closest('.cust-dropdown-wrap')?.contains(e.target)){document.getElementById('triage-cust-list')?.classList.remove('open');document.getElementById('triage-cust-selected')?.classList.remove('open');}
+  if(!document.getElementById('triage-proj-selected')?.closest('.cust-dropdown-wrap')?.contains(e.target)){document.getElementById('triage-proj-list')?.classList.remove('open');document.getElementById('triage-proj-selected')?.classList.remove('open');}
+});
+
+async function assignFiles(){
+  if(!triageState.selected.size||!triageState.projId||!triageState.phase)return;
+  const btn=document.getElementById('assign-btn');
+  btn.innerHTML='<span class="spinner-white"></span> Moving…';btn.disabled=true;
+  try{
+    const photoFolderId=await findFolder('07_Photos & Media',triageState.projId);
+    if(!photoFolderId)throw new Error('07_Photos & Media not found in project');
+    const phaseFolderId=await findOrCreateFolder(triageState.phase,photoFolderId);
+    let moved=0;
+    for(const fileId of triageState.selected){
+      // Move: add new parent, remove old parent
+      await apiCall(buildUrl(`files/${fileId}`,{addParents:phaseFolderId,removeParents:triageState.gdFolderId,fields:'id'}),'PATCH',{});
+      moved++;
+    }
+    triageState.selected=new Set();
+    showAlert('assign-result','success',`${moved} file${moved>1?'s':''} moved to <strong>${triageState.projName} / 07_Photos & Media / ${triageState.phase}</strong>.`);
+    document.getElementById('assign-panel').classList.remove('visible');
+    await loadTriageFiles();// Refresh
+  }catch(err){
+    showAlert('assign-result','error','Error: '+err.message);
+  }finally{
+    btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Move to project folder';
+    btn.disabled=false;
+  }
+}
+
+/* ── CREATE PROJECT ── */
 function selectBranch(el,branch){
   document.querySelectorAll('#tab-create .branch-chip').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');
-  state.selectedBranch=branch;state.selectedCustomer=null;state.isNewCustomer=false;
-  document.getElementById('step2-card').classList.remove('locked-card');
-  document.getElementById('step2-num').classList.remove('inactive');
-  document.getElementById('cust-selected').classList.remove('disabled');
+  el.classList.add('selected');state.selectedBranch=branch;state.selectedCustomer=null;state.isNewCustomer=false;
+  document.getElementById('step2-card').classList.remove('locked-card');document.getElementById('step2-num').classList.remove('inactive');document.getElementById('cust-selected').classList.remove('disabled');
   const ni=document.getElementById('cust-new-input');ni.style.display='none';ni.value='';
-  loadCustomersForBranch(branch);
-  lockStep3();
+  loadCustomersForBranch(branch);lockStep3();
 }
 function lockStep3(){
   ['step3-card','preview-card'].forEach(id=>document.getElementById(id).classList.add('locked-card'));
-  document.getElementById('step3-num').classList.add('inactive');
-  document.getElementById('create-btn').disabled=true;
+  document.getElementById('step3-num').classList.add('inactive');document.getElementById('create-btn').disabled=true;
   ['proj-name','proj-code','proj-desc'].forEach(id=>{const el=document.getElementById(id);el.disabled=true;el.value='';});
 }
 function unlockStep3(){
   ['step3-card','preview-card'].forEach(id=>document.getElementById(id).classList.remove('locked-card'));
-  document.getElementById('step3-num').classList.remove('inactive');
-  document.getElementById('create-btn').disabled=false;
+  document.getElementById('step3-num').classList.remove('inactive');document.getElementById('create-btn').disabled=false;
   ['proj-name','proj-code','proj-desc'].forEach(id=>{document.getElementById(id).disabled=false;});
 }
-
-/* ── CREATE PROJECT: CUSTOMER DROPDOWN ── */
 async function loadCustomersForBranch(branch){
-  const sel=document.getElementById('cust-selected');
-  const list=document.getElementById('cust-list');
-  const lbl=document.getElementById('customer-status-label');
+  const sel=document.getElementById('cust-selected');const list=document.getElementById('cust-list');const lbl=document.getElementById('customer-status-label');
   sel.innerHTML=`<span><span class="spinner"></span>Loading Google Drive customers…</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
   list.innerHTML='';list.classList.remove('open');sel.classList.remove('open');
   let customers=[];
   if(state.authed){
     try{
-      const rootId=await findOrCreateFolder(COMPANY,state.rootFolderId||null);
+      const rootId=getRootId();
       const branchId=await findOrCreateFolder(branch,rootId);
       const customersId=await findOrCreateFolder('Customers',branchId);
       customers=await listFolders(customersId,null,['_TEMPLATE - New Project']);
-      lbl.textContent=customers.length>0?`${customers.length} customer${customers.length>1?'s':''} found`:'No customers yet';
+      lbl.textContent=`${customers.length} customer${customers.length>1?'s':''} found`;
     }catch(e){lbl.textContent='Could not load from Drive';}
   }else{lbl.textContent='Connect Google to load customers';}
   list.innerHTML='';
@@ -794,34 +853,19 @@ async function loadCustomersForBranch(branch){
 function toggleCustDropdown(){
   const sel=document.getElementById('cust-selected');const list=document.getElementById('cust-list');
   if(sel.classList.contains('disabled'))return;
-  const open=list.classList.contains('open');
-  list.classList.toggle('open',!open);sel.classList.toggle('open',!open);
+  const open=list.classList.contains('open');list.classList.toggle('open',!open);sel.classList.toggle('open',!open);
 }
 function pickCustomer(name,isNew){
-  const list=document.getElementById('cust-list');const sel=document.getElementById('cust-selected');const ni=document.getElementById('cust-new-input');
-  list.classList.remove('open');sel.classList.remove('open');
-  if(isNew){
-    state.selectedCustomer=null;state.isNewCustomer=true;
-    sel.innerHTML=`<span style="color:#185FA5;font-weight:500">+ New Customer</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
-    ni.style.display='block';ni.value='';ni.focus();
-  }else{
-    state.selectedCustomer=name;state.isNewCustomer=false;
-    sel.innerHTML=`<span>${name}</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
-    ni.style.display='none';ni.value='';
-  }
+  document.getElementById('cust-list').classList.remove('open');document.getElementById('cust-selected').classList.remove('open');
+  const ni=document.getElementById('cust-new-input');
+  if(isNew){state.selectedCustomer=null;state.isNewCustomer=true;document.getElementById('cust-selected').innerHTML=`<span style="color:#185FA5;font-weight:500">+ New Customer</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;ni.style.display='block';ni.value='';ni.focus();}
+  else{state.selectedCustomer=name;state.isNewCustomer=false;document.getElementById('cust-selected').innerHTML=`<span>${name}</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;ni.style.display='none';ni.value='';}
   unlockStep3();previewStructure();
 }
-document.addEventListener('click',e=>{
-  if(!document.getElementById('cust-wrap').contains(e.target)){document.getElementById('cust-list').classList.remove('open');document.getElementById('cust-selected').classList.remove('open');}
-  if(document.getElementById('up-cust-wrap')&&!document.getElementById('up-cust-wrap').contains(e.target)){document.getElementById('up-cust-list').classList.remove('open');document.getElementById('up-cust-selected').classList.remove('open');}
-  if(document.getElementById('up-proj-wrap')&&!document.getElementById('up-proj-wrap').contains(e.target)){document.getElementById('up-proj-list').classList.remove('open');document.getElementById('up-proj-selected').classList.remove('open');}
-});
 function getCustomerValue(){
   if(state.isNewCustomer)return document.getElementById('cust-new-input').value.trim();
   return state.selectedCustomer||'';
 }
-
-/* ── PREVIEW ── */
 function previewStructure(){
   if(!state.selectedBranch)return;
   const customer=getCustomerValue()||'Customer';
@@ -837,305 +881,43 @@ function previewStructure(){
   perms.forEach(p=>{const bc=p.role==='writer'?'badge-blue':p.role==='commenter'?'badge-amber':'badge-gray';tbl+=`<tr><td style="font-size:11px">${p.folder}</td><td style="font-size:11px;color:#666">${p.email}</td><td><span class="badge ${bc}">${p.role}</span></td></tr>`;});
   document.getElementById('perm-preview').innerHTML=tbl;
 }
-
-/* ── CREATE PROJECT ── */
 async function createProject(){
-  const customer=getCustomerValue();
-  const name=document.getElementById('proj-name').value.trim();
-  const code=document.getElementById('proj-code').value.trim()||'PRJ';
+  const customer=getCustomerValue();const name=document.getElementById('proj-name').value.trim();const code=document.getElementById('proj-code').value.trim()||'PRJ';
   if(!customer){showAlert('create-result','error',state.isNewCustomer?'Please type a new customer name.':'Please select a customer.');return;}
   if(!name){showAlert('create-result','error','Please enter a project name.');return;}
   const fn=`${code} - ${name}`;
-  const btn=document.getElementById('create-btn');
-  btn.innerHTML='<span class="spinner-white"></span> Creating…';btn.disabled=true;
+  const btn=document.getElementById('create-btn');btn.innerHTML='<span class="spinner-white"></span> Creating…';btn.disabled=true;
   try{
-    const rootId=await findOrCreateFolder(COMPANY,state.rootFolderId||null);
+    const rootId=getRootId();
     const branchId=await findOrCreateFolder(state.selectedBranch,rootId);
     const customersId=await findOrCreateFolder('Customers',branchId);
     const customerFolderId=await findOrCreateFolder(customer,customersId);
     const projId=await findOrCreateFolder(fn,customerFolderId);
     const subIds={};
-    for(const f of PROJECT_FOLDERS){
-      const id=await findOrCreateFolder(f.name,projId);subIds[f.name]=id;
-      for(const s of f.subs)await findOrCreateFolder(s,id);
-    }
+    for(const f of PROJECT_FOLDERS){const id=await findOrCreateFolder(f.name,projId);subIds[f.name]=id;for(const s of f.subs)await findOrCreateFolder(s,id);}
     const perms=state.branchPermissions[state.selectedBranch]||[];
     for(const p of perms){if(subIds[p.folder]&&p.email&&!p.email.includes('@yourcompany.com')){try{await assignPermission(subIds[p.folder],p.email,p.role==='writer'?'writer':'reader');}catch(e){}}}
-    const drivesRes=await driveGet('drives',{pageSize:'100'});
-    const allDrives=drivesRes.drives||[];
+    const drivesRes=await driveGet('drives',{pageSize:'100'});const allDrives=drivesRes.drives||[];
     for(const sd of SHARED_DRIVES){
-      if(sd.key==='hr')continue;
-      const sdDrive=allDrives.find(d=>d.name===sd.name);if(!sdDrive)continue;
+      if(sd.key==='hr')continue;const sdDrive=allDrives.find(d=>d.name===sd.name);if(!sdDrive)continue;
       try{
-        const sdId=sdDrive.id;
-        const sdBranchId=await findFolder(state.selectedBranch,sdId,sdId);if(!sdBranchId)continue;
+        const sdId=sdDrive.id;const sdBranchId=await findFolder(state.selectedBranch,sdId,sdId);if(!sdBranchId)continue;
         const sdCustRootId=await findOrCreateFolderInDrive('Customers',sdBranchId,sdId);
         const sdCustId=await findOrCreateFolderInDrive(customer,sdCustRootId,sdId);
         const sdProjId=await findOrCreateFolderInDrive(fn,sdCustId,sdId);
-        for(const fname of SD_PROJECT_FOLDERS[sd.key]||[]){
-          if(subIds[fname]){
-            await createShortcut(fname,subIds[fname],sdProjId,sdId);
-            if(sd.key==='executive'&&state.sdEmails['executive'])try{await assignPermission(subIds[fname],state.sdEmails['executive'],'commenter');}catch(e){}
-          }
-        }
+        for(const fname of SD_PROJECT_FOLDERS[sd.key]||[]){if(subIds[fname]){await createShortcut(fname,subIds[fname],sdProjId,sdId);if(sd.key==='executive'&&state.sdEmails['executive'])try{await assignPermission(subIds[fname],state.sdEmails['executive'],'commenter');}catch(e){}}}
       }catch(e){}
     }
     const entry={id:projId,name:fn,customer,branch:state.selectedBranch,code,driveUrl:`https://drive.google.com/drive/folders/${projId}`,createdAt:new Date().toISOString()};
     state.history.unshift(entry);saveState();renderHistory();
     showAlert('create-result','success',`Project <strong>${code}</strong> created! <a href="https://drive.google.com/drive/folders/${projId}" target="_blank" style="color:#3B6D11;text-decoration:underline">Open in Drive →</a>`);
   }catch(err){showAlert('create-result','error','Error: '+err.message);}
-  finally{
-    btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg> Create project in Google Drive';
-    btn.disabled=false;
-  }
-}
-
-/* ══════════════════════════════
-   UPLOAD PHOTOS
-══════════════════════════════ */
-function upSelectBranch(el,branch){
-  document.querySelectorAll('#tab-upload .branch-chip').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');
-  upState={branch,customerId:null,customerName:null,projectId:null,projectName:null,phase:null,phaseId:null,files:[]};
-  // Unlock step 2
-  const s2=document.getElementById('up-step2-card');s2.classList.remove('locked-card');document.getElementById('up-step2-num').classList.remove('inactive');
-  document.getElementById('up-cust-selected').classList.remove('disabled');
-  // Lock 3+
-  ['up-step3-card','up-step4-card','up-step5-card'].forEach(id=>{document.getElementById(id).classList.add('locked-card');});
-  ['up-step3-num','up-step4-num','up-step5-num'].forEach(id=>{document.getElementById(id).classList.add('inactive');});
-  document.getElementById('up-proj-selected').classList.add('disabled');
-  // Reset phase
-  ['phase-before','phase-during','phase-after'].forEach(id=>document.getElementById(id).classList.remove('selected'));
-  clearFiles();
-  loadUpCustomers(branch);
-}
-
-async function loadUpCustomers(branch){
-  const sel=document.getElementById('up-cust-selected');
-  const list=document.getElementById('up-cust-list');
-  const lbl=document.getElementById('up-customer-label');
-  sel.innerHTML=`<span><span class="spinner"></span>Loading Google Drive customers…</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
-  list.innerHTML='';list.classList.remove('open');sel.classList.remove('open');
-  try{
-    const rootId=await findOrCreateFolder(COMPANY,state.rootFolderId||null);
-    const branchId=await findOrCreateFolder(branch,rootId);
-    const customersId=await findOrCreateFolder('Customers',branchId);
-    const customers=await listFolders(customersId,null,['_TEMPLATE - New Project']);
-    lbl.textContent=`${customers.length} customer${customers.length!==1?'s':''} found`;
-    list.innerHTML='';
-    if(customers.length===0){
-      const empty=document.createElement('div');empty.className='cust-item loading-item';empty.textContent='No customers found for this branch';list.appendChild(empty);
-    }
-    customers.forEach(c=>{
-      const item=document.createElement('div');item.className='cust-item';
-      item.innerHTML=`<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:#666;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>${c.name}`;
-      item.onclick=()=>pickUpCustomer(c.id,c.name);list.appendChild(item);
-    });
-  }catch(e){lbl.textContent='Error loading customers';}
-  sel.innerHTML=`<span style="color:#aaa">Select a customer…</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
-}
-
-function toggleUpCustDropdown(){
-  const sel=document.getElementById('up-cust-selected');const list=document.getElementById('up-cust-list');
-  if(sel.classList.contains('disabled'))return;
-  const open=list.classList.contains('open');list.classList.toggle('open',!open);sel.classList.toggle('open',!open);
-}
-
-async function pickUpCustomer(id,name){
-  document.getElementById('up-cust-list').classList.remove('open');document.getElementById('up-cust-selected').classList.remove('open');
-  upState.customerId=id;upState.customerName=name;upState.projectId=null;upState.projectName=null;upState.phase=null;
-  document.getElementById('up-cust-selected').innerHTML=`<span>${name}</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
-  // Unlock step 3
-  const s3=document.getElementById('up-step3-card');s3.classList.remove('locked-card');document.getElementById('up-step3-num').classList.remove('inactive');
-  document.getElementById('up-proj-selected').classList.remove('disabled');
-  // Lock 4+
-  ['up-step4-card','up-step5-card'].forEach(id=>document.getElementById(id).classList.add('locked-card'));
-  ['up-step4-num','up-step5-num'].forEach(id=>document.getElementById(id).classList.add('inactive'));
-  ['phase-before','phase-during','phase-after'].forEach(id=>document.getElementById(id).classList.remove('selected'));
-  clearFiles();
-  loadUpProjects(id);
-}
-
-async function loadUpProjects(customerId){
-  const sel=document.getElementById('up-proj-selected');const list=document.getElementById('up-proj-list');const lbl=document.getElementById('up-project-label');
-  sel.innerHTML=`<span><span class="spinner"></span>Loading projects…</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
-  list.innerHTML='';list.classList.remove('open');sel.classList.remove('open');
-  try{
-    const projects=await listFolders(customerId);
-    lbl.textContent=`${projects.length} project${projects.length!==1?'s':''} found`;
-    list.innerHTML='';
-    if(projects.length===0){const empty=document.createElement('div');empty.className='cust-item loading-item';empty.textContent='No projects found';list.appendChild(empty);}
-    projects.forEach(p=>{
-      const item=document.createElement('div');item.className='cust-item';
-      item.innerHTML=`<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:#666;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>${p.name}`;
-      item.onclick=()=>pickUpProject(p.id,p.name);list.appendChild(item);
-    });
-  }catch(e){lbl.textContent='Error loading projects';}
-  sel.innerHTML=`<span style="color:#aaa">Select a project…</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
-}
-
-function toggleUpProjDropdown(){
-  const sel=document.getElementById('up-proj-selected');const list=document.getElementById('up-proj-list');
-  if(sel.classList.contains('disabled'))return;
-  const open=list.classList.contains('open');list.classList.toggle('open',!open);sel.classList.toggle('open',!open);
-}
-
-async function pickUpProject(id,name){
-  document.getElementById('up-proj-list').classList.remove('open');document.getElementById('up-proj-selected').classList.remove('open');
-  upState.projectId=id;upState.projectName=name;upState.phase=null;upState.phaseId=null;
-  document.getElementById('up-proj-selected').innerHTML=`<span>${name}</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
-  // Unlock step 4
-  document.getElementById('up-step4-card').classList.remove('locked-card');document.getElementById('up-step4-num').classList.remove('inactive');
-  document.getElementById('up-step5-card').classList.add('locked-card');document.getElementById('up-step5-num').classList.add('inactive');
-  ['phase-before','phase-during','phase-after'].forEach(id=>document.getElementById(id).classList.remove('selected'));
-  clearFiles();
-}
-
-async function selectPhase(phase){
-  ['phase-before','phase-during','phase-after'].forEach(id=>document.getElementById(id).classList.remove('selected'));
-  document.getElementById('phase-'+phase.toLowerCase()).classList.add('selected');
-  upState.phase=phase;upState.phaseId=null;
-  // Find the phase folder inside 07_Photos & Media
-  document.getElementById('up-step5-card').classList.add('locked-card');
-  document.getElementById('up-destination-label').textContent='Finding folder…';
-  try{
-    const photoFolderId=await findFolder('07_Photos & Media',upState.projectId);
-    if(!photoFolderId)throw new Error('07_Photos & Media folder not found');
-    const phaseId=await findOrCreateFolder(phase,photoFolderId);
-    upState.phaseId=phaseId;
-    document.getElementById('up-destination-label').textContent=`→ ${upState.projectName} / 07_Photos & Media / ${phase}`;
-    document.getElementById('up-step5-card').classList.remove('locked-card');
-    document.getElementById('up-step5-num').classList.remove('inactive');
-    clearFiles();
-  }catch(e){
-    document.getElementById('up-destination-label').textContent='Error: '+e.message;
-  }
-}
-
-/* ── FILE HANDLING ── */
-function onDragOver(e){e.preventDefault();document.getElementById('drop-zone').classList.add('dragover');}
-function onDragLeave(e){document.getElementById('drop-zone').classList.remove('dragover');}
-function onDrop(e){e.preventDefault();document.getElementById('drop-zone').classList.remove('dragover');onFilesSelected(e.dataTransfer.files);}
-
-function onFilesSelected(fileList){
-  const files=Array.from(fileList);
-  files.forEach(f=>{
-    if(!upState.files.find(x=>x.file.name===f.name&&x.file.size===f.size)){
-      upState.files.push({file:f,status:'pending',progress:0});
-    }
-  });
-  renderFileList();
-  document.getElementById('upload-btn').style.display=upState.files.length?'inline-flex':'none';
-  document.getElementById('clear-btn').style.display=upState.files.length?'inline-flex':'none';
-}
-
-function renderFileList(){
-  const list=document.getElementById('file-list');
-  list.innerHTML='';
-  upState.files.forEach((item,i)=>{
-    const isImg=item.file.type.startsWith('image/');
-    const sizeStr=item.file.size>1024*1024?`${(item.file.size/1024/1024).toFixed(1)} MB`:`${(item.file.size/1024).toFixed(0)} KB`;
-    const statusColor=item.status==='done'?'#639922':item.status==='error'?'#A32D2D':'#185FA5';
-    const statusText=item.status==='done'?'Uploaded':item.status==='error'?'Error':item.status==='uploading'?`${item.progress}%`:'Ready';
-    const div=document.createElement('div');div.className='file-item';
-    div.innerHTML=`
-      <div class="file-thumb-icon" id="thumb-${i}">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      </div>
-      <div class="file-info">
-        <div class="file-name">${item.file.name}</div>
-        <div class="file-size">${sizeStr}</div>
-        <div class="file-progress"><div class="file-progress-bar" id="prog-${i}" style="width:${item.progress}%"></div></div>
-      </div>
-      <div class="file-status" style="color:${statusColor}">${statusText}</div>
-      ${item.status==='pending'?`<button class="file-remove" onclick="removeFile(${i})"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`:''}
-    `;
-    list.appendChild(div);
-    // Generate thumbnail for images
-    if(isImg){
-      const reader=new FileReader();
-      reader.onload=e=>{
-        const thumb=document.getElementById(`thumb-${i}`);
-        if(thumb)thumb.innerHTML=`<img src="${e.target.result}" class="file-thumb"/>`;
-      };
-      reader.readAsDataURL(item.file);
-    }
-  });
-}
-
-function removeFile(i){
-  upState.files.splice(i,1);renderFileList();
-  document.getElementById('upload-btn').style.display=upState.files.length?'inline-flex':'none';
-  document.getElementById('clear-btn').style.display=upState.files.length?'inline-flex':'none';
-}
-
-function clearFiles(){
-  upState.files=[];
-  document.getElementById('file-list').innerHTML='';
-  document.getElementById('upload-btn').style.display='none';
-  document.getElementById('clear-btn').style.display='none';
-  document.getElementById('upload-result').innerHTML='';
-  document.getElementById('file-input').value='';
-}
-
-async function uploadFiles(){
-  if(!upState.phaseId){showAlert('upload-result','error','Please select a phase first.');return;}
-  if(!upState.files.length){showAlert('upload-result','error','Please select files to upload.');return;}
-  const btn=document.getElementById('upload-btn');
-  btn.innerHTML='<span class="spinner-white"></span> Uploading…';btn.disabled=true;
-  let done=0,errors=0;
-  for(let i=0;i<upState.files.length;i++){
-    const item=upState.files[i];
-    if(item.status==='done')continue;
-    item.status='uploading';item.progress=10;renderFileList();
-    try{
-      await uploadFileToDrive(item.file,upState.phaseId,(p)=>{item.progress=p;const bar=document.getElementById(`prog-${i}`);if(bar)bar.style.width=p+'%';});
-      item.status='done';item.progress=100;done++;
-    }catch(e){item.status='error';errors++;}
-    renderFileList();
-  }
-  btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg> Upload to Google Drive';
-  btn.disabled=false;
-  if(errors===0){
-    showAlert('upload-result','success',`${done} file${done>1?'s':''} uploaded successfully to <strong>${upState.projectName} / 07_Photos & Media / ${upState.phase}</strong>. <a href="https://drive.google.com/drive/folders/${upState.phaseId}" target="_blank" style="color:#3B6D11;text-decoration:underline">Open folder →</a>`);
-  }else{
-    showAlert('upload-result','error',`${done} uploaded, ${errors} failed. Check your connection and try again.`);
-  }
-}
-
-async function uploadFileToDrive(file,parentId,onProgress){
-  // Multipart upload
-  const meta={name:file.name,parents:[parentId]};
-  const boundary='----OptimERAUpload'+Math.random().toString(36).slice(2);
-  const metaStr=JSON.stringify(meta);
-  // Read file as ArrayBuffer
-  const arrayBuf=await file.arrayBuffer();
-  // Build multipart body
-  const encoder=new TextEncoder();
-  const preamble=encoder.encode(
-    `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${metaStr}\r\n--${boundary}\r\nContent-Type: ${file.type||'application/octet-stream'}\r\n\r\n`
-  );
-  const epilogue=encoder.encode(`\r\n--${boundary}--`);
-  const body=new Uint8Array(preamble.byteLength+arrayBuf.byteLength+epilogue.byteLength);
-  body.set(preamble,0);
-  body.set(new Uint8Array(arrayBuf),preamble.byteLength);
-  body.set(epilogue,preamble.byteLength+arrayBuf.byteLength);
-  onProgress&&onProgress(50);
-  const r=await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true`,{
-    method:'POST',
-    headers:{'Authorization':'Bearer '+state.accessToken,'Content-Type':`multipart/related; boundary=${boundary}`},
-    body
-  });
-  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||'Upload failed');}
-  onProgress&&onProgress(100);
-  return r.json();
+  finally{btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg> Create project in Google Drive';btn.disabled=false;}
 }
 
 /* ── BRANCHES ── */
 function renderBranchConfig(){
-  const branch=document.getElementById('branch-config-select').value;
-  const perms=state.branchPermissions[branch]||[];
-  let html='';
+  const branch=document.getElementById('branch-config-select').value;const perms=state.branchPermissions[branch]||[];let html='';
   PROJECT_FOLDERS.forEach(f=>{
     const p=perms.find(x=>x.folder===f.name)||{folder:f.name,email:'',role:'reader'};
     html+=`<div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:#888;margin-bottom:6px;margin-top:12px">${f.name}</div>
@@ -1157,10 +939,7 @@ function updatePerm(branch,folder,field,val){
   if(!p){p={folder,email:'',role:'reader'};state.branchPermissions[branch].push(p);}
   p[field]=val;
 }
-function saveBranchConfig(){
-  saveState();const el=document.getElementById('save-confirm');
-  el.textContent='✓ Saved';el.style.opacity='1';setTimeout(()=>el.style.opacity='0',2000);
-}
+function saveBranchConfig(){saveState();const el=document.getElementById('save-confirm');el.textContent='✓ Saved';el.style.opacity='1';setTimeout(()=>el.style.opacity='0',2000);}
 
 /* ── HISTORY ── */
 function renderHistory(){
@@ -1176,7 +955,7 @@ function renderHistory(){
 
 /* ── SETTINGS ── */
 function saveClientId(){state.clientId=document.getElementById('client-id-input').value.trim();saveState();document.getElementById('client-id-status').textContent=state.clientId?'✓ Saved':'';}
-function saveRootFolder(){state.rootFolderId=document.getElementById('root-folder-id').value.trim();saveState();}
+function saveRootFolder(){state.rootFolderId=document.getElementById('root-folder-id').value.trim();saveState();document.getElementById('root-folder-status').textContent=state.rootFolderId?'✓ Saved':'';}
 function resetAll(){if(!confirm('Reset all saved data?'))return;localStorage.removeItem('dpc_state');location.reload();}
 function showAlert(id,type,msg){
   const el=document.getElementById(id);if(!el)return;
