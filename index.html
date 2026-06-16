@@ -609,7 +609,8 @@ async function verifyDirectory(){
         logLine(`  ✓ ${adminName}/`,'done');
       }
       // General Delivery
-      await findOrCreateFolder('General Delivery',branchId);
+      const gdFolderId=await findOrCreateFolder('General Delivery',branchId);
+      branchAdminIds[branch]['General Delivery']=gdFolderId;
       logLine(`  ✓ General Delivery/`,'done');
       // Customers
       const customersId=await findOrCreateFolder('Customers',branchId);
