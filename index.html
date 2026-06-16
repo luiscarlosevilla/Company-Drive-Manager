@@ -406,7 +406,6 @@ code{background:#f0f0ee;padding:1px 5px;border-radius:4px;font-family:monospace;
 
 <script>
 const COMPANY='OptimERA';
-const HARDCODED_ROOT_ID='1S561J65Ve5SW99zWQYhPQIbP88WjatGN';
 const BRANCHES=['Networks','Corporate','Marine','Tech','Office Supply Store','Linemen'];
 const BRANCH_ADMIN={'Administration':['Policies','SOPs','Reports'],'Personnel':['Org Charts','Training Records','Certifications'],'Finance':['Budgets','Invoices','Expense Reports'],'Assets & Inventory':[],'Vendors':[]};
 const COMPANY_WIDE=['Policies & Procedures','HR & Employee Records','Finance & Accounting','Legal & Compliance','Templates & Standards'];
@@ -562,7 +561,7 @@ async function listFiles(parentId){
   return res.files||[];
 }
 
-function getRootId(){return HARDCODED_ROOT_ID;}
+function getRootId(){return state.rootFolderId||null;}
 
 /* ── VERIFY ── */
 async function verifyDirectory(){
